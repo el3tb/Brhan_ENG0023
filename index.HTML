@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برهان - Engineering Drawing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- شاشة التعهد -->
+        <div class="pledge-screen" id="pledgeScreen">
+            <div class="pledge-box">
+                <div class="pledge-header">
+                    <h2>📜 تعهد وإقرار</h2>
+                    <p>ENG0023 | Engineering Drawing</p>
+                </div>
+                
+                <div class="pledge-text">
+                    <p>أقرّ أنا المستخدم بأنني <strong>مشترك لدى البرهان</strong>، وأتعهد بالالتزام باستخدام الموقع بالشكل الصحيح وعدم استغلاله بطريقة تخالف الأمانة أو الأنظمة.</p>
+                    
+                    <p>وأدرك أنني كطالب جامعي أسعى لتوفيق الله والنجاح في دراستي، ولا يليق بي أن أستفيد من الموقع دون اشتراك، أو أن أقوم بنشر محتوى الموقع أو مشاركته مع غير المشتركين. فإن فعلت ذلك فقد أخللت بالأمانة وخالفت ما تعهدت به.</p>
+                    
+                    <p>لذلك أتعهد بعدم نشر المحتوى أو تمكين غير المشتركين من الاستفادة من الموقع، والالتزام بالسداد والاشتراك النظامي.</p>
+                    
+                    <div class="signature-line">
+                        ويُعدّ النقر على زر الموافقة أدناه إقرارًا مني بقراءة هذا التعهد والموافقة عليه والالتزام بما ورد فيه.
+                    </div>
+                </div>
+                
+                <!-- زر التعهد - تم وضعه فوق بطاقة التواصل -->
+                <button class="accept-btn" onclick="goToHomePage()">
+                    أوافق وأتعهد - اضغط للدخول للموقع
+                </button>
+                
+                <!-- بطاقة التواصل - أسفل الزر -->
+                <div class="pledge-contact">
+                    <a href="https://wa.me/966538566757" class="phone" target="_blank">
+                        <span>💬</span>
+                        <span>0538566757</span>
+                    </a>
+                    <a href="https://t.me/a_3tb" class="telegram" target="_blank">
+                        <span>✉️</span>
+                        <span>a_3tb</span>
+                    </a>
+                    <div style="color: white; font-size: 18px;">للاستفسارات والاشتراك</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- المحتوى الرئيسي (مخفي في البداية) -->
+        <div id="mainContent" style="display: none;">
+            <!-- الهيدر -->
+            <div class="header">
+                <h1>بــرهـــان</h1>
+                <div class="subtitle">ENG0023 | Engineering Drawings and Model</div>
+                
+                <div class="contact-card">
+                    <a href="https://wa.me/966538566757" class="phone" target="_blank">
+                        <span>💬</span>
+                        <span>0538566757</span>
+                        <span class="badge">واتساب</span>
+                    </a>
+                    <a href="https://t.me/a_3tb" class="telegram" target="_blank">
+                        <span>✉️</span>
+                        <span>a_3tb</span>
+                        <span class="badge">تليجرام</span>
+                    </a>
+                    <span class="contact-info-text">للاستفسارات والاشتراك</span>
+                </div>
+            </div>
+
+            <!-- الصفحة الرئيسية -->
+            <div class="home-screen" id="homeScreen">
+                <div class="welcome-banner">
+                    <div class="tools">
+                        📐📏✏️📝
+                    </div>
+                    <div class="text">
+                        <h2>أهلاً بك في اختبارات برهان</h2>
+                        <p>اختر الفصل المناسب واختبر نفسك في مادة الرسومات الهندسي</p>
+                    </div>
+                </div>
+                
+                <div class="chapters-grid" id="chaptersGrid"></div>
+            </div>
+
+            <!-- شاشة الاختبار -->
+            <div class="quiz-screen" id="quizScreen">
+                <div class="quiz-header">
+                    <button class="back-btn" onclick="backToHome()">← العودة للرئيسية</button>
+                    <div class="quiz-stats">
+                        <span class="counter" id="questionCounter">1/50</span>
+                        <span class="timer" id="timer">40:00</span>
+                    </div>
+                </div>
+
+                <div class="quiz-content">
+                    <div class="question-box" id="questionBox"></div>
+                    
+                    <div class="nav-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">→ السابق</button>
+                        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">التالي ←</button>
+                    </div>
+                    
+                    <button class="submit-btn" onclick="submitQuiz()">✅ إنهاء الاختبار</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
