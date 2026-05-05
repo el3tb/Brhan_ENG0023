@@ -1,12 +1,85 @@
 // ============================================
 // ملف: script.js
 // الموقع: اختبارات برهان - Engineering Drawing
-// الوصف: جميع الفصول من 1 إلى 6 مع الأسئلة الكاملة
 // ============================================
 
-// بنك الأسئلة الكامل - جميع الفصول (6 فصول)
+// ============================================
+// الدوال الأساسية - يجب أن تكون في البداية
+// ============================================
+
+function goToHomePage() {
+    // إخفاء شاشة التعهد
+    const pledgeScreen = document.getElementById('pledgeScreen');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (pledgeScreen && mainContent) {
+        pledgeScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        initChapters();
+        showMessage('✓ تم التحقق - مرحباً بك في اختبارات برهان');
+    } else {
+        console.error("لم يتم العثور على العناصر");
+    }
+}
+
+function showMessage(text) {
+    const msg = document.createElement('div');
+    msg.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #00d4ff;
+        color: #0a1929;
+        padding: 15px 40px;
+        border-radius: 50px;
+        z-index: 10001;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 5px 20px rgba(0,212,255,0.3);
+        border: 2px solid white;
+    `;
+    msg.textContent = text;
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 3000);
+}
+
+function initChapters() {
+    const grid = document.getElementById('chaptersGrid');
+    if (!grid) return;
+    
+    const chaptersInfo = {
+        1: { icon: '📘', title: 'الفصل الأول', name: 'Introduction to Engineering Drawing', questions: 50, time: '40 دقيقة' },
+        2: { icon: '📗', title: 'الفصل الثاني', name: 'Line Types', questions: 60, time: '50 دقيقة' },
+        3: { icon: '📙', title: 'الفصل الثالث', name: '2D Geometric Shapes', questions: 45, time: '35 دقيقة' },
+        4: { icon: '📕', title: 'الفصل الرابع', name: 'Platonic Solids', questions: 45, time: '35 دقيقة' },
+        5: { icon: '💻', title: 'الفصل الخامس', name: 'AutoCAD Basics', questions: 30, time: '30 دقيقة' },
+        6: { icon: '🛠️', title: 'الفصل السادس', name: 'AutoCAD Modify Commands', questions: 30, time: '30 دقيقة' }
+    };
+    
+    grid.innerHTML = Object.keys(chaptersInfo).map(num => {
+        const ch = chaptersInfo[num];
+        return `
+            <div class="chapter-card" onclick="startChapter(${num})">
+                <div class="chapter-icon">${ch.icon}</div>
+                <h3>${ch.title}</h3>
+                <div style="font-size: 18px; color: #0a1929; margin-bottom: 10px;">${ch.name}</div>
+                <div class="questions">📝 ${ch.questions} سؤال</div>
+                <div class="time">⏱️ ${ch.time}</div>
+                <div class="chapter-preview">
+                    <span>📐</span><span>📏</span><span>✏️</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================
+// بنك الأسئلة الكامل
+// ============================================
+
 const questionsDB = {
-    // ===================== الفصل الأول: Introduction to Engineering Drawing (50 سؤال) =====================
+    // الفصل الأول: Introduction to Engineering Drawing (50 سؤال)
     1: [
         { question: "Drawing can be created by:", options: ["Freehand sketch", "Using drawing instruments", "Using computer", "All of the above"], correct: 3 },
         { question: "First angle projection is more common in:", options: ["USA", "UK", "Asia", "Africa"], correct: 1 },
@@ -60,7 +133,7 @@ const questionsDB = {
         { question: "The art of representing engineering objects is called:", options: ["Engineering drawing", "Artistic drawing", "Abstract drawing", "Modern art"], correct: 0 }
     ],
 
-    // ===================== الفصل الثاني: Line Types (60 سؤال) =====================
+    // الفصل الثاني: Line Types (60 سؤال)
     2: [
         { question: "What type of line shows visible edges of an object?", options: ["Hidden line", "Visible line", "Center line", "Phantom line"], correct: 1 },
         { question: "Hidden lines are represented by:", options: ["Continuous thick line", "Dashed line", "Chain line", "Wavy line"], correct: 1 },
@@ -124,7 +197,7 @@ const questionsDB = {
         { question: "Short break lines are:", options: ["Thick and wavy", "Thin and straight", "Dashed", "Chain"], correct: 0 }
     ],
 
-    // ===================== الفصل الثالث: 2D Geometric Shapes (45 سؤال) =====================
+    // الفصل الثالث: 2D Geometric Shapes (45 سؤال)
     3: [
         { question: "What is a 2D shape?", options: ["Has length and width only", "Has length, width and height", "Has depth only", "Has volume"], correct: 0 },
         { question: "Which of the following is a 2D shape?", options: ["Cube", "Sphere", "Circle", "Cone"], correct: 2 },
@@ -173,7 +246,7 @@ const questionsDB = {
         { question: "An octagon has how many diagonals?", options: ["20", "18", "16", "14"], correct: 0 }
     ],
 
-    // ===================== الفصل الرابع: Platonic Solids (45 سؤال) =====================
+    // الفصل الرابع: Platonic Solids (45 سؤال)
     4: [
         { question: "How many Platonic solids exist?", options: ["3", "4", "5", "6"], correct: 2 },
         { question: "Which Platonic solid is associated with Earth?", options: ["Tetrahedron", "Cube", "Octahedron", "Icosahedron"], correct: 1 },
@@ -222,7 +295,7 @@ const questionsDB = {
         { question: "Platonic solids are also called:", options: ["Regular polyhedra", "Irregular solids", "Complex solids", "Simple solids"], correct: 0 }
     ],
 
-       // ===================== الفصل الخامس: AutoCAD Basics (30 سؤال) =====================
+    // الفصل الخامس: AutoCAD Basics (30 سؤال) - محدث بأسئلتك الجديدة
     5: [
         { question: "What does AutoCAD stand for?", options: ["Automatic Computer Aided Design & Drafting", "Auto Control Design", "Advanced CAD", "None"], correct: 0 },
         { question: "AutoCAD was first released in:", options: ["1980", "1982", "1990", "2000"], correct: 1 },
@@ -256,7 +329,7 @@ const questionsDB = {
         { question: "180° direction is:", options: ["Right", "Left", "Up", "Down"], correct: 1 }
     ],
 
-    // ===================== الفصل السادس: AutoCAD Modify Commands (30 سؤال) =====================
+    // الفصل السادس: AutoCAD Modify Commands (30 سؤال) - محدث بأسئلتك الجديدة
     6: [
         { question: "LINE command is used to:", options: ["Draw circles", "Draw lines", "Delete", "Rotate"], correct: 1 },
         { question: "LINE shortcut:", options: ["L", "LN", "LI", "LE"], correct: 0 },
@@ -289,25 +362,16 @@ const questionsDB = {
         { question: "POLYLINE is useful for:", options: ["Separate objects", "Continuous paths", "Printing", "Deleting"], correct: 1 },
         { question: "LINE command starts by:", options: ["Radius", "First point selection", "Angle", "Offset"], correct: 1 }
     ]
+};
 
 // أوقات الاختبار لكل فصل (بالثواني)
 const chapterTimes = {
-    1: 2400,  // 40 دقيقة (50 سؤال)
-    2: 3000,  // 50 دقيقة (60 سؤال)
-    3: 2100,  // 35 دقيقة (45 سؤال)
-    4: 2100,  // 35 دقيقة (45 سؤال)
-    5: 1800,  // 30 دقيقة (30 سؤال)
-    6: 1800   // 30 دقيقة (30 سؤال)
-};
-
-// معلومات الفصول للعرض
-const chaptersInfo = {
-    1: { icon: '📘', title: 'الفصل الأول', name: 'Introduction to Engineering Drawing', questions: 50, time: '40 دقيقة' },
-    2: { icon: '📗', title: 'الفصل الثاني', name: 'Line Types', questions: 60, time: '50 دقيقة' },
-    3: { icon: '📙', title: 'الفصل الثالث', name: '2D Geometric Shapes', questions: 45, time: '35 دقيقة' },
-    4: { icon: '📕', title: 'الفصل الرابع', name: 'Platonic Solids', questions: 45, time: '35 دقيقة' },
-    5: { icon: '💻', title: 'الفصل الخامس', name: 'AutoCAD Basics', questions: 30, time: '30 دقيقة' },
-    6: { icon: '🛠️', title: 'الفصل السادس', name: 'AutoCAD Modify Commands', questions: 30, time: '30 دقيقة' }
+    1: 2400,
+    2: 3000,
+    3: 2100,
+    4: 2100,
+    5: 1800,
+    6: 1800
 };
 
 // المتغيرات العامة
@@ -321,57 +385,8 @@ let quizActive = false;
 let quizSubmitted = false;
 
 // ============================================
-// دوال التحويل والتفاعل الرئيسية
+// دوال الاختبار
 // ============================================
-
-function goToHomePage() {
-    document.getElementById('pledgeScreen').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
-    initChapters();
-    showMessage('✓ تم التحقق - مرحباً بك في اختبارات برهان');
-}
-
-function initChapters() {
-    const grid = document.getElementById('chaptersGrid');
-    
-    grid.innerHTML = Object.keys(chaptersInfo).map(num => {
-        const ch = chaptersInfo[num];
-        return `
-            <div class="chapter-card" onclick="startChapter(${num})">
-                <div class="chapter-icon">${ch.icon}</div>
-                <h3>${ch.title}</h3>
-                <div style="font-size: 18px; color: #0a1929; margin-bottom: 10px;">${ch.name}</div>
-                <div class="questions">📝 ${ch.questions} سؤال</div>
-                <div class="time">⏱️ ${ch.time}</div>
-                <div class="chapter-preview">
-                    <span>📐</span><span>📏</span><span>✏️</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function showMessage(text) {
-    const msg = document.createElement('div');
-    msg.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #00d4ff;
-        color: #0a1929;
-        padding: 15px 40px;
-        border-radius: 50px;
-        z-index: 10001;
-        font-size: 18px;
-        font-weight: bold;
-        box-shadow: 0 5px 20px rgba(0,212,255,0.3);
-        border: 2px solid white;
-    `;
-    msg.textContent = text;
-    document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), 3000);
-}
 
 function startChapter(chapter) {
     currentChapter = chapter;
