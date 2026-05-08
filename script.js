@@ -1,6 +1,7 @@
 // ============================================
 // ملف: script.js
 // الموقع: اختبارات برهان - Engineering Drawing
+// تم التحديث: إضافة حماية الجلسة
 // ============================================
 
 // ============================================
@@ -13,6 +14,9 @@ function goToHomePage() {
     const mainContent = document.getElementById('mainContent');
     
     if (pledgeScreen && mainContent) {
+        // التعديل: حفظ جلسة نشطة في المتصفح
+        sessionStorage.setItem('quizAccessGranted', 'true');
+        
         pledgeScreen.style.display = 'none';
         mainContent.style.display = 'block';
         initChapters();
@@ -587,8 +591,26 @@ function closeResults() {
     backToHome();
 }
 
-// تهيئة الصفحة عند التحميل
+// ============================================
+// التعديل: إضافة حماية الجلسة عند تحميل الصفحة
+// ============================================
 window.onload = function() {
-    document.getElementById('pledgeScreen').style.display = 'flex';
-    document.getElementById('mainContent').style.display = 'none';
+    // التحقق مما إذا كان المستخدم قد وافق على التعهد في هذه الجلسة
+    const isAccessGranted = sessionStorage.getItem('quizAccessGranted');
+    
+    if (isAccessGranted === 'true') {
+        // إذا كان قد وافق بالفعل، أظهر المحتوى مباشرة
+        document.getElementById('pledgeScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        initChapters();
+    } else {
+        // إذا لم يوافق، أظهر شاشة التعهد وأخفي المحتوى نهائياً
+        document.getElementById('pledgeScreen').style.display = 'flex';
+        document.getElementById('mainContent').style.display = 'none';
+        
+        // تأكد من إخفاء أي محتوى رئيسي يظهر بطريقة غير مصرح بها
+        // هذا هو سطر الأمان الإضافي
+        const mainContent = document.getElementById('mainContent');
+        if (mainContent) mainContent.style.display = 'none';
+    }
 };
