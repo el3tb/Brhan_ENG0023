@@ -1,28 +1,23 @@
 // ============================================
 // ملف: script.js
 // الموقع: اختبارات برهان - Engineering Drawing
-// تم التحديث: إضافة حماية الجلسة
+// الإصدار: كامل - الفصول 1 إلى 9
 // ============================================
 
 // ============================================
-// الدوال الأساسية - يجب أن تكون في البداية
+// الدوال الأساسية
 // ============================================
 
 function goToHomePage() {
-    // إخفاء شاشة التعهد
     const pledgeScreen = document.getElementById('pledgeScreen');
     const mainContent = document.getElementById('mainContent');
     
     if (pledgeScreen && mainContent) {
-        // التعديل: حفظ جلسة نشطة في المتصفح
         sessionStorage.setItem('quizAccessGranted', 'true');
-        
         pledgeScreen.style.display = 'none';
         mainContent.style.display = 'block';
         initChapters();
         showMessage('✓ تم التحقق - مرحباً بك في اختبارات برهان');
-    } else {
-        console.error("لم يتم العثور على العناصر");
     }
 }
 
@@ -58,7 +53,10 @@ function initChapters() {
         3: { icon: '📙', title: 'الفصل الثالث', name: '2D Geometric Shapes', questions: 45, time: '35 دقيقة' },
         4: { icon: '📕', title: 'الفصل الرابع', name: 'Platonic Solids', questions: 45, time: '35 دقيقة' },
         5: { icon: '💻', title: 'الفصل الخامس', name: 'AutoCAD Basics', questions: 30, time: '30 دقيقة' },
-        6: { icon: '🛠️', title: 'الفصل السادس', name: 'AutoCAD Modify Commands', questions: 30, time: '30 دقيقة' }
+        6: { icon: '🛠️', title: 'الفصل السادس', name: 'AutoCAD Modify Commands', questions: 30, time: '30 دقيقة' },
+        7: { icon: '🖥️', title: 'الفصل السابع', name: 'Software Tools for Line Drawing (CAD)', questions: 30, time: '30 دقيقة' },
+        8: { icon: '📐', title: 'الفصل الثامن', name: 'Software Tools for 2D Shapes Drawing', questions: 30, time: '30 دقيقة' },
+        9: { icon: '🧊', title: 'الفصل التاسع', name: '3D Modeling Basics', questions: 30, time: '30 دقيقة' }
     };
     
     grid.innerHTML = Object.keys(chaptersInfo).map(num => {
@@ -79,11 +77,10 @@ function initChapters() {
 }
 
 // ============================================
-// بنك الأسئلة الكامل
+// بنك الأسئلة - الفصل الأول (50 سؤال)
 // ============================================
 
 const questionsDB = {
-    // الفصل الأول: Introduction to Engineering Drawing (50 سؤال)
     1: [
         { question: "Drawing can be created by:", options: ["Freehand sketch", "Using drawing instruments", "Using computer", "All of the above"], correct: 3 },
         { question: "First angle projection is more common in:", options: ["USA", "UK", "Asia", "Africa"], correct: 1 },
@@ -299,7 +296,7 @@ const questionsDB = {
         { question: "Platonic solids are also called:", options: ["Regular polyhedra", "Irregular solids", "Complex solids", "Simple solids"], correct: 0 }
     ],
 
-    // الفصل الخامس: AutoCAD Basics (30 سؤال) - محدث بأسئلتك الجديدة
+    // الفصل الخامس: AutoCAD Basics (30 سؤال)
     5: [
         { question: "What does AutoCAD stand for?", options: ["Automatic Computer Aided Design & Drafting", "Auto Control Design", "Advanced CAD", "None"], correct: 0 },
         { question: "AutoCAD was first released in:", options: ["1980", "1982", "1990", "2000"], correct: 1 },
@@ -333,7 +330,7 @@ const questionsDB = {
         { question: "180° direction is:", options: ["Right", "Left", "Up", "Down"], correct: 1 }
     ],
 
-    // الفصل السادس: AutoCAD Modify Commands (30 سؤال) - محدث بأسئلتك الجديدة
+    // الفصل السادس: AutoCAD Modify Commands (30 سؤال)
     6: [
         { question: "LINE command is used to:", options: ["Draw circles", "Draw lines", "Delete", "Rotate"], correct: 1 },
         { question: "LINE shortcut:", options: ["L", "LN", "LI", "LE"], correct: 0 },
@@ -365,6 +362,108 @@ const questionsDB = {
         { question: "RECTANGLE creates:", options: ["Open shape", "Closed polyline", "Circle", "Arc"], correct: 1 },
         { question: "POLYLINE is useful for:", options: ["Separate objects", "Continuous paths", "Printing", "Deleting"], correct: 1 },
         { question: "LINE command starts by:", options: ["Radius", "First point selection", "Angle", "Offset"], correct: 1 }
+    ],
+
+    // الفصل السابع: Software Tools for Line Drawing (CAD) - 30 سؤال
+    7: [
+        { question: "What does CAD stand for?", options: ["Computer Automatic Design", "Computer-Aided Drawing", "Creative Architectural Drawing", "Computer Application Drafting"], correct: 1 },
+        { question: "AutoCAD supports creating:", options: ["Only 2D drawings", "Only 3D drawings", "Both 2D and 3D drawings", "Only animations"], correct: 2 },
+        { question: "AutoCAD became available as a web application in:", options: ["1995", "2000", "2010", "2020"], correct: 2 },
+        { question: "Which command is used to draw straight lines?", options: ["ARC", "LINE", "SPLINE", "OFFSET"], correct: 1 },
+        { question: "Which key ends the LINE command?", options: ["Ctrl", "Shift", "Enter", "Delete"], correct: 2 },
+        { question: "Which command closes a line shape?", options: ["P", "L", "C", "R"], correct: 2 },
+        { question: "Which key is used to undo line drawing steps?", options: ["Y", "Z", "U", "X"], correct: 2 },
+        { question: "Dynamic Input drawing depends mainly on:", options: ["Images", "Coordinates and angles", "Voice commands", "Colors"], correct: 1 },
+        { question: "Which key switches between coordinate and angle fields?", options: ["Space", "Tab", "Alt", "Esc"], correct: 1 },
+        { question: "The Polyline command creates:", options: ["Independent lines", "Connected segments treated as one object", "Multiple circles", "Random points"], correct: 1 },
+        { question: "A polyline object is treated as:", options: ["Multiple separate objects", "One single element", "A layer", "A dimension"], correct: 1 },
+        { question: "Which tab contains the Polyline command?", options: ["Insert", "Home", "View", "Output"], correct: 1 },
+        { question: "The default arc drawing method uses:", options: ["One point", "Two points", "Three points", "Four points"], correct: 2 },
+        { question: "What is selected second while drawing an arc?", options: ["Radius", "Upper middle point", "Diameter", "Layer"], correct: 1 },
+        { question: "Layers are similar to:", options: ["Music tracks", "Transparent drawings placed over each other", "Internet pages", "Spreadsheets"], correct: 1 },
+        { question: "Layers are used to:", options: ["Install programs", "Classify drawing elements", "Delete drawings", "Animate objects"], correct: 1 },
+        { question: "Which layer exists by default in AutoCAD?", options: ["Main", "Layer1", "Zero (0)", "Basic"], correct: 2 },
+        { question: "The default layer Zero (0):", options: ["Can be deleted", "Can be renamed", "Cannot be deleted or renamed", "Is hidden automatically"], correct: 2 },
+        { question: "Which command creates a new layer?", options: ["Freeze", "Set Current", "Create New Layer", "Delete Layer"], correct: 2 },
+        { question: "Which command makes a layer active?", options: ["Set Current", "Freeze", "Print", "Lock"], correct: 0 },
+        { question: "A locked layer:", options: ["Becomes invisible", "Cannot be modified", "Is deleted", "Changes color automatically"], correct: 1 },
+        { question: "Which command hides all objects in a layer?", options: ["Hatch", "On/Off", "Arc", "Polyline"], correct: 1 },
+        { question: "Which command prevents a layer from being modified and displayed?", options: ["Freeze", "Offset", "Distance", "Measure"], correct: 0 },
+        { question: "The active layer:", options: ["Can always be frozen", "Cannot be frozen directly", "Has no objects", "Is automatically deleted"], correct: 1 },
+        { question: "Which property controls line thickness?", options: ["Line Type", "Line Weight", "Status", "Layer Name"], correct: 1 },
+        { question: "Which property controls dashed and dotted lines?", options: ["Freeze", "Line Type", "Hatch", "Weight"], correct: 1 },
+        { question: "Which property changes line color?", options: ["Line Color", "Line Weight", "Set Current", "Freeze"], correct: 0 },
+        { question: "The default line thickness in AutoCAD is:", options: ["5", "10", "1", "0"], correct: 3 },
+        { question: "Which command loads extra line styles?", options: ["Continue", "Load", "Draw", "Extend"], correct: 1 },
+        { question: "Which line type is mentioned in the lecture?", options: ["Zigzag", "Dashed", "Spiral", "Double"], correct: 1 }
+    ],
+
+    // الفصل الثامن: Software Tools for 2D Shapes Drawing - 30 سؤال
+    8: [
+        { question: "Which command measures the distance between two points?", options: ["Hatch", "Distance", "Polygon", "Offset"], correct: 1 },
+        { question: "Quick Measure automatically displays:", options: ["Colors", "Measurements and angles", "Layers", "Fonts"], correct: 1 },
+        { question: "The Command Window is located:", options: ["At the top", "At the center", "At the bottom of the screen", "Outside the interface"], correct: 2 },
+        { question: "The Status Bar contains:", options: ["Games", "Drawing helper tools", "Music controls", "Web browser tools"], correct: 1 },
+        { question: "Drawing accuracy is improved by:", options: ["Snapping to geometric points", "Printing frequently", "Using colors", "Closing the program"], correct: 0 },
+        { question: "Which command allows drawing at fixed angles?", options: ["Hatch", "Ortho-related angle tool", "Array", "Chamfer"], correct: 1 },
+        { question: "Which icon is used to draw rectangles?", options: ["Circle", "Rectangle", "Arc", "Hatch"], correct: 1 },
+        { question: "Rectangle drawing requires selecting:", options: ["One point", "Two opposite corners", "Three points", "Radius only"], correct: 1 },
+        { question: "Which option creates beveled rectangle corners?", options: ["Fillet", "Chamfer", "Offset", "Radius"], correct: 1 },
+        { question: "Which option creates rounded rectangle corners?", options: ["Hatch", "Fillet", "Distance", "Array"], correct: 1 },
+        { question: "Polygon command creates:", options: ["Irregular curves", "Regular polygons", "Only triangles", "Only circles"], correct: 1 },
+        { question: "Polygon sides can range from:", options: ["1 to 50", "2 to 500", "3 to 1024", "5 to 100"], correct: 2 },
+        { question: "Inscribed in Circle means:", options: ["Polygon outside the circle", "Circle touches polygon sides externally", "Circle passes through polygon vertices", "Polygon has no center"], correct: 2 },
+        { question: "Spline command creates:", options: ["Sharp corners", "Smooth curves", "Layers", "3D objects"], correct: 1 },
+        { question: "Hatch command is used to:", options: ["Delete objects", "Fill closed spaces", "Rotate drawings", "Scale layers"], correct: 1 },
+        { question: "Which Hatch type uses predefined patterns?", options: ["Gradient", "Solid", "Pattern", "Quick"], correct: 2 },
+        { question: "Which Hatch type fills an area with one color?", options: ["Pattern", "Solid", "Gradient", "User Defined"], correct: 1 },
+        { question: "Which Hatch type blends two colors?", options: ["Radius", "Gradient", "Continue", "Diameter"], correct: 1 },
+        { question: "The Array command creates:", options: ["Dimensions", "Multiple copies", "Layers", "Arcs"], correct: 1 },
+        { question: "Which Array type distributes objects around a circle?", options: ["Rectangular Array", "Path Array", "Polar Array", "Dynamic Array"], correct: 2 },
+        { question: "Offset command creates:", options: ["Copies at a specified distance", "3D walls", "Layers", "Curves only"], correct: 0 },
+        { question: "Dimensions are used to display:", options: ["Colors", "Measurements", "Materials", "Layers"], correct: 1 },
+        { question: "Dimension tools are found in which tab?", options: ["Insert", "View", "Annotate", "Render"], correct: 2 },
+        { question: "Which is a type of dimension?", options: ["Radius", "Gradient", "Hatch", "Spline"], correct: 0 },
+        { question: "Which dimension type measures angles?", options: ["Linear", "Angular", "Radius", "Baseline"], correct: 1 },
+        { question: "Which dimension type measures straight distances?", options: ["Linear", "Arc Length", "Diameter", "Quick"], correct: 0 },
+        { question: "Which dimension type measures circles using the center to edge distance?", options: ["Diameter", "Radius", "Continue", "Baseline"], correct: 1 },
+        { question: "Which command is commonly used for construction detail shading?", options: ["Polygon", "Hatch", "Offset", "Array"], correct: 1 },
+        { question: "Polar Array requires selecting:", options: ["A center point", "A printer", "A layer name", "A hatch pattern"], correct: 0 },
+        { question: "Offset can work with:", options: ["Lines and circles only", "Pre-drawn elements", "Layers only", "Text only"], correct: 1 }
+    ],
+
+    // الفصل التاسع: 3D Modeling Basics - 30 سؤال
+    9: [
+        { question: "AutoCAD can create which types of 3D models?", options: ["Lines, Arcs, Layers", "Solids, Surfaces, Meshes", "Dimensions, Hatch, Arrays", "Circles, Splines, Boxes"], correct: 1 },
+        { question: "Solids possess:", options: ["No properties", "Physical properties", "Only color", "Only transparency"], correct: 1 },
+        { question: "Surfaces have:", options: ["Thickness", "Mass", "No thickness", "Infinite weight"], correct: 2 },
+        { question: "Meshes are commonly used in:", options: ["Banking", "Games and movies", "Accounting", "Word processing"], correct: 1 },
+        { question: "Which workspace contains all 3D modeling tools?", options: ["Drafting", "3D Basics", "3D Modeling", "Annotate"], correct: 2 },
+        { question: "Which workspace contains commonly used 3D tools?", options: ["Hatch", "3D Basics", "Insert", "Output"], correct: 1 },
+        { question: "The Workspace drop-down is found on:", options: ["Status bar only", "Quick Access Toolbar", "Ribbon bottom", "Command line"], correct: 1 },
+        { question: "Which template starts a 3D Modeling workspace?", options: ["acad2D.dwt", "acadiso3D.dwt", "hatch.dwt", "layer.dwt"], correct: 1 },
+        { question: "The View Cube is located at the:", options: ["Bottom right", "Top right", "Bottom center", "Top left"], correct: 1 },
+        { question: "The View Cube is used to:", options: ["Print drawings", "Modify model views", "Delete objects", "Create layers"], correct: 1 },
+        { question: "Which tab contains solid modeling tools?", options: ["Surface", "Mesh", "Solid", "Insert"], correct: 2 },
+        { question: "Which tab creates realistic images?", options: ["Visualize", "Mesh", "Annotate", "Layers"], correct: 0 },
+        { question: "The Box tool creates objects with:", options: ["Circular faces", "Six rectangular or square faces", "Triangular faces only", "One face only"], correct: 1 },
+        { question: "Which command creates cylinders?", options: ["BOX", "CYLINDER", "HATCH", "OFFSET"], correct: 1 },
+        { question: "A cylinder may be:", options: ["Circular or elliptical", "Hexagonal only", "Triangular only", "Flat only"], correct: 0 },
+        { question: "A torus is shaped like:", options: ["A cube", "A pyramid", "A donut", "A cone"], correct: 2 },
+        { question: "Which primitive has a polygon base?", options: ["Sphere", "Pyramid", "Cylinder", "Torus"], correct: 1 },
+        { question: "A sphere requires specifying:", options: ["Width only", "Radius or diameter", "Layer type", "Hatch style"], correct: 1 },
+        { question: "Which primitive uses tube radius?", options: ["Pyramid", "Box", "Torus", "Cone"], correct: 2 },
+        { question: "Which command creates 3D walls?", options: ["Extrude", "Polysolid", "Array", "Dimension"], correct: 1 },
+        { question: "Polysolid can convert which objects into walls?", options: ["Only text", "Line, arc, polyline, or circle", "Only dimensions", "Only hatches"], correct: 1 },
+        { question: "Which mode should be activated while using Polysolid?", options: ["Snap", "Ortho", "Hatch", "Render"], correct: 1 },
+        { question: "The Extrude tool adds:", options: ["Color", "Transparency", "Height", "Rotation"], correct: 2 },
+        { question: "Extruding a closed shape creates:", options: ["A surface", "A solid", "A layer", "A hatch"], correct: 1 },
+        { question: "Extruding an open sketch creates:", options: ["A surface", "A solid", "A box", "A torus"], correct: 0 },
+        { question: "Which sketch tool was used before Extrude in the example?", options: ["Circle", "Polyline", "Hatch", "Array"], correct: 1 },
+        { question: "Which view orientation was selected before extrusion?", options: ["Top", "Front", "Bottom", "Right"], correct: 1 },
+        { question: "SE Isometric stands for:", options: ["South East Isometric", "South Edge Internal", "Side External Isometric", "Standard Engineering Isometric"], correct: 0 },
+        { question: "Which control changes model display styles?", options: ["In-canvas controls", "Layer manager", "Hatch editor", "Command history"], correct: 0 },
+        { question: "Which view style was applied to the box example?", options: ["Wireframe", "Shades of Grey", "Hidden", "Transparent"], correct: 1 }
     ]
 };
 
@@ -375,7 +474,10 @@ const chapterTimes = {
     3: 2100,
     4: 2100,
     5: 1800,
-    6: 1800
+    6: 1800,
+    7: 1800,
+    8: 1800,
+    9: 1800
 };
 
 // المتغيرات العامة
@@ -443,7 +545,7 @@ function updateDisplay() {
     
     const q = currentQuestions[currentIndex];
     let html = `
-        <div class="question-number">Question ${currentIndex + 1}</div>
+        <div class="question-number">سؤال ${currentIndex + 1}</div>
         <div class="question-text">${q.question}</div>
         <div class="options">
     `;
@@ -592,24 +694,19 @@ function closeResults() {
 }
 
 // ============================================
-// التعديل: إضافة حماية الجلسة عند تحميل الصفحة
+// تهيئة الصفحة عند التحميل مع التحقق من الجلسة
 // ============================================
 window.onload = function() {
-    // التحقق مما إذا كان المستخدم قد وافق على التعهد في هذه الجلسة
     const isAccessGranted = sessionStorage.getItem('quizAccessGranted');
     
     if (isAccessGranted === 'true') {
-        // إذا كان قد وافق بالفعل، أظهر المحتوى مباشرة
         document.getElementById('pledgeScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
         initChapters();
     } else {
-        // إذا لم يوافق، أظهر شاشة التعهد وأخفي المحتوى نهائياً
         document.getElementById('pledgeScreen').style.display = 'flex';
         document.getElementById('mainContent').style.display = 'none';
         
-        // تأكد من إخفاء أي محتوى رئيسي يظهر بطريقة غير مصرح بها
-        // هذا هو سطر الأمان الإضافي
         const mainContent = document.getElementById('mainContent');
         if (mainContent) mainContent.style.display = 'none';
     }
