@@ -83,8 +83,8 @@ function initChapters() {
 const questionsDB = {
     1: [
         { question: "Drawing can be created by:", options: ["Freehand sketch", "Using drawing instruments", "Using computer", "All of the above"], correct: 3 },
-        { question: "First angle projection is more common in:", options: ["USA", "UK", "Asia", "Africa"], correct: 1 },
-        { question: "Third angle projection is more common in:", options: ["USA", "UK", "Europe", "Australia"], correct: 0 },
+        { question: "First angle projection is more common in:", options: ["USA", "Europe", "Canada", "Australia"], correct: 1 },
+        { question: "Third angle projection is more common in:", options: ["USA", "Europe", "Asia", "Africa"], correct: 0 },
         { question: "What is the main purpose of engineering drawing?", options: ["Express emotions", "Convey technical information", "Create art", "Decorate spaces"], correct: 1 },
         { question: "Which of the following is NOT a type of engineering drawing?", options: ["Artistic drawing", "Technical drawing", "Mechanical drawing", "Civil drawing"], correct: 0 },
         { question: "Dimension numbers in a drawing represent:", options: ["The scaled size", "The true size", "The estimated size", "The approximate size"], correct: 1 },
@@ -118,8 +118,8 @@ const questionsDB = {
         { question: "Cold press paper has:", options: ["Some texture", "Very smooth surface", "Very rough surface", "Glossy surface"], correct: 0 },
         { question: "Hot press paper has:", options: ["Smooth texture", "Rough texture", "Medium texture", "No texture"], correct: 0 },
         { question: "Markers work best on:", options: ["Smooth papers", "Rough papers", "Textured papers", "Newsprint"], correct: 0 },
-        { question: "Pastels work best on:", options: ["Rough paper", "Smooth paper", "Glossy paper", "Coated paper"], correct: 0 },
-        { question: "Newsprint paper is used for:", options: ["Ball point pens", "Water colors", "Oil paints", "Acrylic paints"], correct: 0 },
+        { question: "Which tool is used to draw horizontal lines in traditional drafting?", options: ["T-Square", "Set Square", "Compass", "Protractor"], correct: 0 },
+        { question: "French curves are used for drawing:", options: ["Straight lines", "Perfect circles", "Irregular curves", "Parallel lines"], correct: 2 },
         { question: "Cartridge paper weight range is:", options: ["80-200 gsm", "200-300 gsm", "300-400 gsm", "400-500 gsm"], correct: 0 },
         { question: "Acid free paper prevents:", options: ["Yellowing over time", "Tearing", "Fading", "Wrinkling"], correct: 0 },
         { question: "A3 paper size is commonly used for:", options: ["Title blocks", "Small sketches", "Business cards", "Stamps"], correct: 0 },
@@ -188,7 +188,7 @@ const questionsDB = {
         { question: "Leader lines are used to direct:", options: ["Dimensions and notes", "Only dimensions", "Only notes", "Only symbols"], correct: 0 },
         { question: "Cutting plane lines show location of:", options: ["Cutting planes", "Hidden features", "Visible features", "Center lines"], correct: 0 },
         { question: "Break lines separate sections for:", options: ["Clarity", "Confusion", "Decoration", "Art"], correct: 0 },
-        { question: "Phantom lines are also used for:", options: ["Alternate position of parts", "Visible edges", "Hidden edges", "Center lines"], correct: 0 },
+        { question: "When a visible line coincides with a hidden line in a drawing, which one is drawn?", options: ["Hidden line", "Visible line", "Center line", "Neither"], correct: 1 },
         { question: "Symmetry lines act as:", options: ["Axis of symmetry", "Cutting plane", "Hidden edge", "Visible edge"], correct: 0 },
         { question: "The thickness of cutting plane lines is:", options: ["0.6 mm", "0.1 mm", "0.2 mm", "0.3 mm"], correct: 0 },
         { question: "Cutting plane lines have line segments at:", options: ["90 degrees", "45 degrees", "30 degrees", "60 degrees"], correct: 0 },
@@ -242,9 +242,9 @@ const questionsDB = {
         { question: "2D shapes have:", options: ["Area only", "Volume only", "Both area and volume", "Neither"], correct: 0 },
         { question: "3D shapes have:", options: ["Volume", "Only area", "Only length", "Only width"], correct: 0 },
         { question: "A polygon with all sides equal is called:", options: ["Regular polygon", "Irregular polygon", "Complex polygon", "Simple polygon"], correct: 0 },
-        { question: "A pentagon has how many diagonals?", options: ["5", "6", "7", "8"], correct: 0 },
-        { question: "A hexagon has how many diagonals?", options: ["9", "10", "11", "12"], correct: 0 },
-        { question: "An octagon has how many diagonals?", options: ["20", "18", "16", "14"], correct: 0 }
+       { question: "In orthographic projection, how many principal views can theoretically be created?", options: ["3", "4", "6", "8"], correct: 2 },
+        { question: "The top view of an object is projected onto which principal plane?", options: ["Frontal plane", "Horizontal plane", "Profile plane", "Vertical plane"], correct: 1 },
+       { question: "In First Angle Projection, the object is placed between:", options: ["The observer and projection plane", "The projection plane and observer", "Two projection planes", "Below the horizontal plane"], correct: 0 }
     ],
 
     // الفصل الرابع: Platonic Solids (45 سؤال)
