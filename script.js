@@ -1,487 +1,2003 @@
-// ============================================
-// ملف: script.js
-// الموقع: اختبارات برهان - Engineering Drawing
-// الإصدار: كامل - الفصول 1 إلى 9
-// ============================================
-
-// ============================================
-// الدوال الأساسية
-// ============================================
-
-function goToHomePage() {
-    const pledgeScreen = document.getElementById('pledgeScreen');
-    const mainContent = document.getElementById('mainContent');
-    
-    if (pledgeScreen && mainContent) {
-        sessionStorage.setItem('quizAccessGranted', 'true');
-        pledgeScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-        initChapters();
-        showMessage('✓ تم التحقق - مرحباً بك في اختبارات برهان');
-    }
-}
-
-function showMessage(text) {
-    const msg = document.createElement('div');
-    msg.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #00d4ff;
-        color: #0a1929;
-        padding: 15px 40px;
-        border-radius: 50px;
-        z-index: 10001;
-        font-size: 18px;
-        font-weight: bold;
-        box-shadow: 0 5px 20px rgba(0,212,255,0.3);
-        border: 2px solid white;
-    `;
-    msg.textContent = text;
-    document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), 3000);
-}
-
-function initChapters() {
-    const grid = document.getElementById('chaptersGrid');
-    if (!grid) return;
-    
-    const chaptersInfo = {
-        1: { icon: '📘', title: 'الفصل الأول', name: 'Introduction to Engineering Drawing', questions: 50, time: '40 دقيقة' },
-        2: { icon: '📗', title: 'الفصل الثاني', name: 'Line Types', questions: 60, time: '50 دقيقة' },
-        3: { icon: '📙', title: 'الفصل الثالث', name: '2D Geometric Shapes', questions: 45, time: '35 دقيقة' },
-        4: { icon: '📕', title: 'الفصل الرابع', name: 'Platonic Solids', questions: 45, time: '35 دقيقة' },
-        5: { icon: '💻', title: 'الفصل الخامس', name: 'AutoCAD Basics', questions: 30, time: '30 دقيقة' },
-        6: { icon: '🛠️', title: 'الفصل السادس', name: 'AutoCAD Modify Commands', questions: 30, time: '30 دقيقة' },
-        7: { icon: '🖥️', title: 'الفصل السابع', name: 'Software Tools for Line Drawing (CAD)', questions: 30, time: '30 دقيقة' },
-        8: { icon: '📐', title: 'الفصل الثامن', name: 'Software Tools for 2D Shapes Drawing', questions: 30, time: '30 دقيقة' },
-        9: { icon: '🧊', title: 'الفصل التاسع', name: '3D Modeling Basics', questions: 30, time: '30 دقيقة' }
-    };
-    
-    grid.innerHTML = Object.keys(chaptersInfo).map(num => {
-        const ch = chaptersInfo[num];
-        return `
-            <div class="chapter-card" onclick="startChapter(${num})">
-                <div class="chapter-icon">${ch.icon}</div>
-                <h3>${ch.title}</h3>
-                <div style="font-size: 18px; color: #0a1929; margin-bottom: 10px;">${ch.name}</div>
-                <div class="questions">📝 ${ch.questions} سؤال</div>
-                <div class="time">⏱️ ${ch.time}</div>
-                <div class="chapter-preview">
-                    <span>📐</span><span>📏</span><span>✏️</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-// ============================================
-// بنك الأسئلة - الفصل الأول (50 سؤال)
-// ============================================
+/*
+ * BURHAN — ENG0023 Engineering Drawings and Model
+ * Curated question bank: one item per distinct learning objective.
+ * Questions, options and answer keys are grounded in the supplied course files.
+ * Explanations are bilingual; every review item reports chapter and topic.
+ */
+'use strict';
 
 const questionsDB = {
-    1: [
-        { question: "Drawing can be created by:", options: ["Freehand sketch", "Using drawing instruments", "Using computer", "All of the above"], correct: 3 },
-        { question: "First angle projection is more common in:", options: ["USA", "Europe", "Canada", "Australia"], correct: 1 },
-        { question: "Third angle projection is more common in:", options: ["USA", "Europe", "Asia", "Africa"], correct: 0 },
-        { question: "What is the main purpose of engineering drawing?", options: ["Express emotions", "Convey technical information", "Create art", "Decorate spaces"], correct: 1 },
-        { question: "Which of the following is NOT a type of engineering drawing?", options: ["Artistic drawing", "Technical drawing", "Mechanical drawing", "Civil drawing"], correct: 0 },
-        { question: "Dimension numbers in a drawing represent:", options: ["The scaled size", "The true size", "The estimated size", "The approximate size"], correct: 1 },
-        { question: "What does the 'B' in HB pencil scale stand for?", options: ["Hardness", "Blackness", "Brightness", "Blueness"], correct: 1 },
-        { question: "What does the 'H' in HB pencil scale stand for?", options: ["Hardness", "Blackness", "Height", "Heat"], correct: 0 },
-        { question: "Engineering drawing is considered as:", options: ["Art form", "Graphical language", "Music notation", "Literary work"], correct: 1 },
-        { question: "Which of the following is an element of engineering drawing?", options: ["Graphics language", "Word language", "Both A and B", "None of the above"], correct: 2 },
-        { question: "The purpose of artistic drawing is to:", options: ["Convey emotion", "Show exact measurements", "Display technical details", "Show manufacturing process"], correct: 0 },
-        { question: "Which standard drawing code is internationally recognized?", options: ["ISO", "ABC", "XYZ", "123"], correct: 0 },
-        { question: "Engineering drawing instruments are used to make the drawing:", options: ["Precise", "Colorful", "Large", "Small"], correct: 0 },
-        { question: "What is GSM in paper measurement?", options: ["Grams per square meter", "Giant size measure", "Graphic standard method", "General scale measurement"], correct: 0 },
-        { question: "Which type of paper is best for finished artwork?", options: ["Sketch paper", "Drawing paper", "Newsprint", "Tissue paper"], correct: 1 },
-        { question: "The 'H' in HB scale stands for:", options: ["Hardness", "Heavy", "Height", "Heat"], correct: 0 },
-        { question: "The 'B' in HB scale stands for:", options: ["Blackness", "Brightness", "Blue", "Bold"], correct: 0 },
-        { question: "Which pencil is harder: 2H or 2B?", options: ["2H", "2B", "Both same", "Cannot determine"], correct: 0 },
-        { question: "Which pencil is darker: 4B or 2B?", options: ["4B", "2B", "Both same", "Cannot determine"], correct: 0 },
-        { question: "Artistic drawing can be understood by:", options: ["Everyone", "Engineers only", "Artists only", "Designers only"], correct: 0 },
-        { question: "Engineering drawing requires knowledge of:", options: ["Standards and scales", "Colors only", "Shading only", "Perspective only"], correct: 0 },
-        { question: "ANSI stands for:", options: ["American National Standards Institute", "Asian National Standards Institute", "Australian National Standards Institute", "African National Standards Institute"], correct: 0 },
-        { question: "JIS stands for:", options: ["Japanese Industrial Standards", "Joint International Standards", "Journal of Industrial Standards", "Java Integration System"], correct: 0 },
-        { question: "BS stands for:", options: ["British Standards", "Basic Standards", "Blue Standards", "Back Side"], correct: 0 },
-        { question: "The graphical language in engineering drawing describes:", options: ["Shape", "Size", "Material", "Cost"], correct: 0 },
-        { question: "The word language in engineering drawing describes:", options: ["Size and specifications", "Shape only", "Color only", "Texture only"], correct: 0 },
-        { question: "Features of an object in engineering drawing include:", options: ["Surface and edge", "Color and texture", "Weight and density", "Cost and material"], correct: 0 },
-        { question: "Conventional drawing tools include:", options: ["Pencils and compass", "Computer and mouse", "Printer and scanner", "All of the above"], correct: 0 },
-        { question: "Digital drawing tools include:", options: ["CAD software", "Pencils", "Paper", "Eraser"], correct: 0 },
-        { question: "CAD stands for:", options: ["Computer Aided Design", "Computer Assisted Drawing", "Creative Art Design", "Central Application Database"], correct: 0 },
-        { question: "The main advantage of digital media is:", options: ["Editability and efficiency", "Lower cost", "Better quality", "Easier to learn"], correct: 0 },
-        { question: "Sketch paper weight ranges from:", options: ["30-60 lbs", "70-100 lbs", "100-150 lbs", "150-200 lbs"], correct: 0 },
-        { question: "Drawing paper weight is at least:", options: ["80 lbs", "40 lbs", "20 lbs", "10 lbs"], correct: 0 },
-        { question: "Cold press paper has:", options: ["Some texture", "Very smooth surface", "Very rough surface", "Glossy surface"], correct: 0 },
-        { question: "Hot press paper has:", options: ["Smooth texture", "Rough texture", "Medium texture", "No texture"], correct: 0 },
-        { question: "Markers work best on:", options: ["Smooth papers", "Rough papers", "Textured papers", "Newsprint"], correct: 0 },
-        { question: "Which tool is used to draw horizontal lines in traditional drafting?", options: ["T-Square", "Set Square", "Compass", "Protractor"], correct: 0 },
-        { question: "French curves are used for drawing:", options: ["Straight lines", "Perfect circles", "Irregular curves", "Parallel lines"], correct: 2 },
-        { question: "Cartridge paper weight range is:", options: ["80-200 gsm", "200-300 gsm", "300-400 gsm", "400-500 gsm"], correct: 0 },
-        { question: "Acid free paper prevents:", options: ["Yellowing over time", "Tearing", "Fading", "Wrinkling"], correct: 0 },
-        { question: "A3 paper size is commonly used for:", options: ["Title blocks", "Small sketches", "Business cards", "Stamps"], correct: 0 },
-        { question: "Title block contains:", options: ["Student name and ID", "Drawing only", "Colors only", "Pictures only"], correct: 0 },
-        { question: "Engineering drawing is essential for:", options: ["Manufacturing", "Painting", "Sculpting", "Singing"], correct: 0 },
-        { question: "Machine drawing is used by:", options: ["Mechanical engineers", "Civil engineers", "Electrical engineers", "Software engineers"], correct: 0 },
-        { question: "Building drawing is used by:", options: ["Civil engineers", "Mechanical engineers", "Electrical engineers", "Chemical engineers"], correct: 0 },
-        { question: "Circuit diagrams are used by:", options: ["Electrical engineers", "Civil engineers", "Mechanical engineers", "Architects"], correct: 0 },
-        { question: "Computer graphics are used by:", options: ["All engineers", "Only designers", "Only artists", "Only programmers"], correct: 0 },
-        { question: "The purpose of engineering drawing is to provide information about:", options: ["Size, shape, and material", "Color only", "Price only", "Weight only"], correct: 0 },
-        { question: "Engineering drawing is a:", options: ["Two-dimensional representation", "Three-dimensional model", "One-dimensional line", "Four-dimensional concept"], correct: 0 },
-        { question: "The art of representing engineering objects is called:", options: ["Engineering drawing", "Artistic drawing", "Abstract drawing", "Modern art"], correct: 0 }
-    ],
-
-    // الفصل الثاني: Line Types (60 سؤال)
-    2: [
-        { question: "What type of line shows visible edges of an object?", options: ["Hidden line", "Visible line", "Center line", "Phantom line"], correct: 1 },
-        { question: "Hidden lines are represented by:", options: ["Continuous thick line", "Dashed line", "Chain line", "Wavy line"], correct: 1 },
-        { question: "Center lines are used to show:", options: ["Center of circles", "Hidden edges", "Visible edges", "Cutting planes"], correct: 0 },
-        { question: "Which line type is part of a dimension?", options: ["Break lines", "Phantom lines", "Extension lines", "Cutting plane lines"], correct: 2 },
-        { question: "Extension lines should start from the object at:", options: ["0 mm", "1.5 mm", "5 mm", "10 mm"], correct: 1 },
-        { question: "Section lines (hatching) are drawn at what angle?", options: ["30°", "45°", "60°", "90°"], correct: 1 },
-        { question: "Cutting plane lines show:", options: ["Hidden features", "Where a section is cut", "Center of objects", "Dimensions"], correct: 1 },
-        { question: "Phantom lines are used to show:", options: ["Visible edges", "Alternate positions of moving parts", "Center of circles", "Dimensions"], correct: 1 },
-        { question: "Break lines are used to:", options: ["Show dimensions", "Save drawing space", "Show center", "Show hidden edges"], correct: 1 },
-        { question: "Leader lines connect:", options: ["Two points", "Notes to features", "Two circles", "Two lines"], correct: 1 },
-        { question: "Visible outline is represented by:", options: ["Continuous thick line", "Continuous thin line", "Dashed line", "Chain line"], correct: 0 },
-        { question: "Center line is represented by:", options: ["Continuous thick line", "Continuous thin line", "Dashed line", "Chain thin line"], correct: 3 },
-        { question: "Symmetry lines are used as:", options: ["Axis of symmetry", "Cutting plane", "Hidden edge", "Dimension line"], correct: 0 },
-        { question: "Which line type is thick and black?", options: ["Visible lines", "Center lines", "Hidden lines", "Phantom lines"], correct: 0 },
-        { question: "Dimension lines have at their ends:", options: ["Circles", "Arrowheads", "Squares", "Triangles"], correct: 1 },
-        { question: "Long break lines are represented by:", options: ["Thick wavy line", "Long thin lines", "Dashed lines", "Chain lines"], correct: 1 },
-        { question: "Short break lines are represented by:", options: ["Thick wavy line", "Long thin lines", "Dashed lines", "Chain lines"], correct: 0 },
-        { question: "In section views, what do section lines represent?", options: ["Center of object", "Material cut through", "Hidden features", "Dimensions"], correct: 1 },
-        { question: "Cutting plane lines extend past the edge by:", options: ["6 mm", "1 mm", "10 mm", "15 mm"], correct: 0 },
-        { question: "Cutting plane lines have arrows pointing:", options: ["Away from section view", "Toward section view", "Both directions", "No arrows"], correct: 0 },
-        { question: "Phantom lines are composed of:", options: ["Long dashes and small dashes", "Only dots", "Only dashes", "Continuous line"], correct: 0 },
-        { question: "Phantom lines are used to show:", options: ["Repetitive details", "Visible edges", "Hidden edges", "Center lines"], correct: 0 },
-        { question: "Cylindrical break lines are:", options: ["Thin lines", "Thick lines", "Dashed lines", "Chain lines"], correct: 0 },
-        { question: "Dimension lines should not be crossed by:", options: ["Extension lines", "Visible lines", "Hidden lines", "Center lines"], correct: 0 },
-        { question: "Hidden lines should meet at:", options: ["Corners", "Midpoints", "Ends", "Centers"], correct: 0 },
-        { question: "Center lines should extend beyond the object:", options: ["Short distance", "Long distance", "Not extend", "Half the size"], correct: 0 },
-        { question: "Section lines are also called:", options: ["Hatching", "Dimension lines", "Hidden lines", "Visible lines"], correct: 0 },
-        { question: "The thickness of visible lines is:", options: ["Thick", "Thin", "Medium", "Variable"], correct: 0 },
-        { question: "The thickness of hidden lines is:", options: ["Thin", "Thick", "Medium", "Very thick"], correct: 0 },
-        { question: "The thickness of center lines is:", options: ["Thin", "Thick", "Very thick", "Extra thick"], correct: 0 },
-        { question: "Arrowheads are used on:", options: ["Dimension lines", "Hidden lines", "Center lines", "Section lines"], correct: 0 },
-        { question: "Extension lines begin at a distance of:", options: ["1.5 mm from object", "0 mm from object", "5 mm from object", "10 mm from object"], correct: 0 },
-        { question: "Extension lines extend beyond dimension line by:", options: ["3 mm", "1 mm", "5 mm", "10 mm"], correct: 0 },
-        { question: "Leader lines should not be parallel to:", options: ["Dimension lines", "Visible lines", "Hidden lines", "Center lines"], correct: 0 },
-        { question: "Cutting plane lines are:", options: ["Thick dashed lines", "Thin continuous lines", "Thick continuous lines", "Thin dashed lines"], correct: 0 },
-        { question: "The direction of sight for section view is shown by:", options: ["Arrows", "Dots", "Circles", "Squares"], correct: 0 },
-        { question: "Break lines are used to reveal:", options: ["Interior features", "Exterior features", "Dimensions", "Notes"], correct: 0 },
-        { question: "Symmetry lines are also called:", options: ["Axis of symmetry", "Center lines", "Hidden lines", "Visible lines"], correct: 0 },
-        { question: "Phantom lines show relationship between:", options: ["Elements that fit together", "Hidden features", "Visible edges", "Dimensions"], correct: 0 },
-        { question: "Long break lines indicate:", options: ["Removed section", "Added section", "Hidden section", "Visible section"], correct: 0 },
-        { question: "Short break lines are:", options: ["Thick wavy lines", "Thin straight lines", "Dashed lines", "Chain lines"], correct: 0 },
-        { question: "Cylindrical break lines are used for:", options: ["Spherical parts", "Rectangular parts", "Triangular parts", "Square parts"], correct: 0 },
-        { question: "The standard line types are used in:", options: ["Technical drawings", "Artistic drawings", "Abstract art", "Paintings"], correct: 0 },
-        { question: "Line styles in CAD are called:", options: ["Linestyles", "Drawstyles", "Penstyles", "Artstyles"], correct: 0 },
-        { question: "Hidden lines represent features that are:", options: ["Not visible", "Visible", "Cut", "Sectioned"], correct: 0 },
-        { question: "Section lines represent surfaces cut by:", options: ["Cutting plane", "Visible plane", "Hidden plane", "Center plane"], correct: 0 },
-        { question: "Center lines are made up of:", options: ["Alternating long and short dashes", "Only short dashes", "Only long dashes", "Continuous line"], correct: 0 },
-        { question: "Dimension lines are broken for:", options: ["Dimension number", "Arrowheads", "Extension lines", "Notes"], correct: 0 },
-        { question: "Extension lines show the extent of:", options: ["Dimension", "Object", "View", "Section"], correct: 0 },
-        { question: "Leader lines are used to direct:", options: ["Dimensions and notes", "Only dimensions", "Only notes", "Only symbols"], correct: 0 },
-        { question: "Cutting plane lines show location of:", options: ["Cutting planes", "Hidden features", "Visible features", "Center lines"], correct: 0 },
-        { question: "Break lines separate sections for:", options: ["Clarity", "Confusion", "Decoration", "Art"], correct: 0 },
-        { question: "When a visible line coincides with a hidden line in a drawing, which one is drawn?", options: ["Hidden line", "Visible line", "Center line", "Neither"], correct: 1 },
-        { question: "Symmetry lines act as:", options: ["Axis of symmetry", "Cutting plane", "Hidden edge", "Visible edge"], correct: 0 },
-        { question: "The thickness of cutting plane lines is:", options: ["0.6 mm", "0.1 mm", "0.2 mm", "0.3 mm"], correct: 0 },
-        { question: "Cutting plane lines have line segments at:", options: ["90 degrees", "45 degrees", "30 degrees", "60 degrees"], correct: 0 },
-        { question: "The arrows on cutting plane lines point:", options: ["Away from section view", "Toward section view", "Up", "Down"], correct: 0 },
-        { question: "Phantom lines have pairs of:", options: ["Small dashes", "Large dashes", "Dots", "Circles"], correct: 0 },
-        { question: "Long break lines are:", options: ["Long and thin", "Short and thick", "Dashed", "Chain"], correct: 0 },
-        { question: "Short break lines are:", options: ["Thick and wavy", "Thin and straight", "Dashed", "Chain"], correct: 0 }
-    ],
-
-    // الفصل الثالث: 2D Geometric Shapes (45 سؤال)
-    3: [
-        { question: "What is a 2D shape?", options: ["Has length and width only", "Has length, width and height", "Has depth only", "Has volume"], correct: 0 },
-        { question: "Which of the following is a 2D shape?", options: ["Cube", "Sphere", "Circle", "Cone"], correct: 2 },
-        { question: "How many sides does a pentagon have?", options: ["4", "5", "6", "8"], correct: 1 },
-        { question: "Sum of interior angles of a triangle is:", options: ["90°", "180°", "270°", "360°"], correct: 1 },
-        { question: "A regular polygon has:", options: ["All sides equal", "All angles equal", "Both sides and angles equal", "No specific property"], correct: 2 },
-        { question: "Which shape has four equal sides and four right angles?", options: ["Rectangle", "Square", "Rhombus", "Parallelogram"], correct: 1 },
-        { question: "What is the sum of interior angles of a pentagon?", options: ["360°", "450°", "540°", "720°"], correct: 2 },
-        { question: "An octagon has how many sides?", options: ["6", "7", "8", "9"], correct: 2 },
-        { question: "Which of these is NOT a polygon?", options: ["Triangle", "Square", "Circle", "Pentagon"], correct: 2 },
-        { question: "A hexagon has how many sides?", options: ["5", "6", "7", "8"], correct: 1 },
-        { question: "In a right-angled triangle, one angle is:", options: ["30°", "45°", "60°", "90°"], correct: 3 },
-        { question: "An equilateral triangle has:", options: ["Two equal sides", "All sides equal", "No equal sides", "One right angle"], correct: 1 },
-        { question: "The interior angle of a regular pentagon is:", options: ["90°", "108°", "120°", "135°"], correct: 1 },
-        { question: "A quadrilateral has how many sides?", options: ["3", "4", "5", "6"], correct: 1 },
-        { question: "A heptagon has how many sides?", options: ["6", "7", "8", "9"], correct: 1 },
-        { question: "A decagon has how many sides?", options: ["8", "9", "10", "11"], correct: 2 },
-        { question: "A nonagon has how many sides?", options: ["7", "8", "9", "10"], correct: 2 },
-        { question: "A dodecagon has how many sides?", options: ["10", "11", "12", "13"], correct: 2 },
-        { question: "The sum of interior angles of a hexagon is:", options: ["540°", "630°", "720°", "810°"], correct: 2 },
-        { question: "The sum of interior angles of an octagon is:", options: ["960°", "1040°", "1080°", "1120°"], correct: 2 },
-        { question: "The sum of interior angles of a decagon is:", options: ["1260°", "1320°", "1440°", "1500°"], correct: 2 },
-        { question: "An isosceles triangle has:", options: ["Two equal sides", "All sides equal", "No equal sides", "One right angle"], correct: 0 },
-        { question: "A scalene triangle has:", options: ["All sides different", "Two equal sides", "All sides equal", "One right angle"], correct: 0 },
-        { question: "An acute triangle has all angles:", options: ["Less than 90°", "Greater than 90°", "Equal to 90°", "More than 180°"], correct: 0 },
-        { question: "An obtuse triangle has one angle:", options: ["Greater than 90°", "Less than 90°", "Equal to 90°", "Equal to 180°"], correct: 0 },
-        { question: "A rectangle has opposite sides:", options: ["Equal and parallel", "Equal only", "Parallel only", "Different"], correct: 0 },
-        { question: "A rhombus has all sides:", options: ["Equal", "Different", "Parallel", "Perpendicular"], correct: 0 },
-        { question: "A parallelogram has opposite sides:", options: ["Parallel and equal", "Perpendicular", "Intersecting", "Curved"], correct: 0 },
-        { question: "A trapezoid has how many parallel sides?", options: ["Two", "One", "Three", "Four"], correct: 1 },
-        { question: "The diagonals of a square:", options: ["Are equal and bisect at 90°", "Are unequal", "Don't bisect", "Are parallel"], correct: 0 },
-        { question: "The diagonals of a rectangle:", options: ["Are equal", "Are unequal", "Are perpendicular", "Are parallel"], correct: 0 },
-        { question: "The diagonals of a rhombus:", options: ["Bisect at 90°", "Are equal", "Are parallel", "Don't bisect"], correct: 0 },
-        { question: "A circle is defined by:", options: ["Center and radius", "Three points", "Diameter", "All of the above"], correct: 3 },
-        { question: "The radius of a circle is:", options: ["Half the diameter", "Twice the diameter", "Equal to diameter", "None"], correct: 0 },
-        { question: "A chord is:", options: ["Line connecting two points on circle", "Line from center to circle", "Line through center", "Curved line"], correct: 0 },
-        { question: "The diameter is the:", options: ["Longest chord", "Shortest chord", "Radius", "Arc"], correct: 0 },
-        { question: "An arc is:", options: ["Part of circle", "Whole circle", "Diameter", "Radius"], correct: 0 },
-        { question: "A semi-circle is:", options: ["Half of circle", "Quarter of circle", "Full circle", "Arc"], correct: 0 },
-        { question: "An ellipse is:", options: ["Oval shape", "Circle", "Square", "Triangle"], correct: 0 },
-        { question: "2D shapes have:", options: ["Area only", "Volume only", "Both area and volume", "Neither"], correct: 0 },
-        { question: "3D shapes have:", options: ["Volume", "Only area", "Only length", "Only width"], correct: 0 },
-        { question: "A polygon with all sides equal is called:", options: ["Regular polygon", "Irregular polygon", "Complex polygon", "Simple polygon"], correct: 0 },
-       { question: "In orthographic projection, how many principal views can theoretically be created?", options: ["3", "4", "6", "8"], correct: 2 },
-        { question: "The top view of an object is projected onto which principal plane?", options: ["Frontal plane", "Horizontal plane", "Profile plane", "Vertical plane"], correct: 1 },
-       { question: "In First Angle Projection, the object is placed between:", options: ["The observer and projection plane", "The projection plane and observer", "Two projection planes", "Below the horizontal plane"], correct: 0 }
-    ],
-
-    // الفصل الرابع: Platonic Solids (45 سؤال)
-    4: [
-        { question: "How many Platonic solids exist?", options: ["3", "4", "5", "6"], correct: 2 },
-        { question: "Which Platonic solid is associated with Earth?", options: ["Tetrahedron", "Cube", "Octahedron", "Icosahedron"], correct: 1 },
-        { question: "Which Platonic solid is associated with Fire?", options: ["Tetrahedron", "Cube", "Octahedron", "Dodecahedron"], correct: 0 },
-        { question: "Which Platonic solid is associated with Air?", options: ["Tetrahedron", "Cube", "Octahedron", "Icosahedron"], correct: 2 },
-        { question: "Which Platonic solid is associated with Water?", options: ["Tetrahedron", "Cube", "Octahedron", "Icosahedron"], correct: 3 },
-        { question: "Which Platonic solid is associated with the Universe?", options: ["Tetrahedron", "Cube", "Dodecahedron", "Icosahedron"], correct: 2 },
-        { question: "How many faces does a tetrahedron have?", options: ["4", "6", "8", "12"], correct: 0 },
-        { question: "How many faces does a cube have?", options: ["4", "6", "8", "12"], correct: 1 },
-        { question: "How many faces does an octahedron have?", options: ["4", "6", "8", "12"], correct: 2 },
-        { question: "How many faces does a dodecahedron have?", options: ["8", "10", "12", "20"], correct: 2 },
-        { question: "How many faces does an icosahedron have?", options: ["8", "12", "20", "24"], correct: 2 },
-        { question: "All faces of Platonic solids are:", options: ["Regular and congruent", "Irregular", "Different sizes", "Curved"], correct: 0 },
-        { question: "Platonic solids are:", options: ["Concave", "Convex", "Both", "Neither"], correct: 1 },
-        { question: "How many edges does a cube have?", options: ["8", "10", "12", "14"], correct: 2 },
-        { question: "How many vertices does a tetrahedron have?", options: ["4", "6", "8", "10"], correct: 0 },
-        { question: "According to Euler's formula, F + V - E = ?", options: ["0", "1", "2", "3"], correct: 2 },
-        { question: "How many edges does a tetrahedron have?", options: ["4", "5", "6", "7"], correct: 2 },
-        { question: "How many vertices does a cube have?", options: ["6", "8", "10", "12"], correct: 1 },
-        { question: "How many edges does an octahedron have?", options: ["10", "11", "12", "13"], correct: 2 },
-        { question: "How many vertices does an octahedron have?", options: ["4", "5", "6", "7"], correct: 2 },
-        { question: "How many edges does a dodecahedron have?", options: ["20", "25", "30", "35"], correct: 2 },
-        { question: "How many vertices does a dodecahedron have?", options: ["20", "25", "30", "35"], correct: 0 },
-        { question: "How many edges does an icosahedron have?", options: ["20", "25", "30", "35"], correct: 2 },
-        { question: "How many vertices does an icosahedron have?", options: ["10", "11", "12", "13"], correct: 2 },
-        { question: "At each vertex of a tetrahedron, how many faces meet?", options: ["2", "3", "4", "5"], correct: 1 },
-        { question: "At each vertex of a cube, how many faces meet?", options: ["2", "3", "4", "5"], correct: 1 },
-        { question: "At each vertex of an octahedron, how many faces meet?", options: ["2", "3", "4", "5"], correct: 2 },
-        { question: "At each vertex of a dodecahedron, how many faces meet?", options: ["2", "3", "4", "5"], correct: 1 },
-        { question: "At each vertex of an icosahedron, how many faces meet?", options: ["3", "4", "5", "6"], correct: 2 },
-        { question: "The faces of a tetrahedron are:", options: ["Triangles", "Squares", "Pentagons", "Hexagons"], correct: 0 },
-        { question: "The faces of a cube are:", options: ["Triangles", "Squares", "Pentagons", "Hexagons"], correct: 1 },
-        { question: "The faces of an octahedron are:", options: ["Triangles", "Squares", "Pentagons", "Hexagons"], correct: 0 },
-        { question: "The faces of a dodecahedron are:", options: ["Triangles", "Squares", "Pentagons", "Hexagons"], correct: 2 },
-        { question: "The faces of an icosahedron are:", options: ["Triangles", "Squares", "Pentagons", "Hexagons"], correct: 0 },
-        { question: "A regular tetrahedron has faces that are:", options: ["Equilateral triangles", "Right triangles", "Isosceles triangles", "Scalene triangles"], correct: 0 },
-        { question: "A cube has how many planes of symmetry?", options: ["6", "7", "8", "9"], correct: 3 },
-        { question: "A tetrahedron has how many planes of symmetry?", options: ["4", "5", "6", "7"], correct: 2 },
-        { question: "Which Platonic solid has no parallel faces?", options: ["Tetrahedron", "Cube", "Octahedron", "Dodecahedron"], correct: 0 },
-        { question: "Which Platonic solid has the greatest volume for its surface area?", options: ["Tetrahedron", "Cube", "Dodecahedron", "Icosahedron"], correct: 3 },
-        { question: "Which Platonic solid has the greatest number of faces?", options: ["Dodecahedron", "Icosahedron", "Octahedron", "Cube"], correct: 1 },
-        { question: "How many diagonals does a dodecahedron have?", options: ["100", "120", "140", "160"], correct: 3 },
-        { question: "The internal angle of a regular pentagon is:", options: ["108°", "120°", "135°", "150°"], correct: 0 },
-        { question: "In a dodecahedron, how many edges meet at each vertex?", options: ["2", "3", "4", "5"], correct: 1 },
-        { question: "In an icosahedron, how many edges meet at each vertex?", options: ["3", "4", "5", "6"], correct: 2 },
-        { question: "Platonic solids are also called:", options: ["Regular polyhedra", "Irregular solids", "Complex solids", "Simple solids"], correct: 0 }
-    ],
-
-    // الفصل الخامس: AutoCAD Basics (30 سؤال)
-    5: [
-        { question: "What does AutoCAD stand for?", options: ["Automatic Computer Aided Design & Drafting", "Auto Control Design", "Advanced CAD", "None"], correct: 0 },
-        { question: "AutoCAD was first released in:", options: ["1980", "1982", "1990", "2000"], correct: 1 },
-        { question: "AutoCAD is developed by:", options: ["Microsoft", "Autodesk", "IBM", "Intel"], correct: 1 },
-        { question: "AutoCAD is used for:", options: ["Playing games", "CAD design and drafting", "Writing documents", "Browsing"], correct: 1 },
-        { question: "AutoCAD supports:", options: ["2D only", "3D only", "Both 2D and 3D", "None"], correct: 2 },
-        { question: "First AutoCAD versions ran on:", options: ["Windows", "Linux", "DOS", "Mac"], correct: 2 },
-        { question: "Model space is:", options: ["2D paper", "3D drawing area in real size", "Printing area", "Menu"], correct: 1 },
-        { question: "Paper space is:", options: ["3D space", "Layout like paper", "Coding area", "Storage"], correct: 1 },
-        { question: "Most drawings are done in:", options: ["Paper space", "Model space", "Layout", "View"], correct: 1 },
-        { question: "AutoCAD drawings are:", options: ["Inaccurate", "Accurate and clean", "Hard to edit", "Slow"], correct: 1 },
-        { question: "Manual drawing is:", options: ["Faster", "Less accurate", "Easier", "Automatic"], correct: 1 },
-        { question: "AutoCAD allows:", options: ["Easy modification", "No editing", "Only printing", "Only saving"], correct: 0 },
-        { question: "AutoCAD requires:", options: ["Pencil", "Computer system", "Only paper", "Scanner"], correct: 1 },
-        { question: "Plotter is used for:", options: ["Input", "Printing drawings", "Coding", "Saving"], correct: 1 },
-        { question: "Input device commonly used:", options: ["Plotter", "Mouse", "Printer", "CPU"], correct: 1 },
-        { question: "Right-click shows:", options: ["Delete", "Shortcut menu", "Save", "Zoom"], correct: 1 },
-        { question: "Commands can be entered using:", options: ["Command line", "Toolbars", "Menus", "All of the above"], correct: 3 },
-        { question: "Command line is usually:", options: ["Top", "Bottom of screen", "Left", "Hidden"], correct: 1 },
-        { question: "Autocomplete appears when:", options: ["Saving", "Typing command", "Printing", "Drawing"], correct: 1 },
-        { question: "OSNAP is used for:", options: ["Zoom", "Precise point selection", "Coloring", "Printing"], correct: 1 },
-        { question: "Absolute coordinates are:", options: ["Based on previous point", "From (0,0) origin", "Angle based", "Random"], correct: 1 },
-        { question: "Absolute format is:", options: ["@X,Y", "X,Y", "@D<A", "None"], correct: 1 },
-        { question: "Relative coordinates use:", options: ["X,Y", "@X,Y", "D<A", "None"], correct: 1 },
-        { question: "Relative coordinates depend on:", options: ["Origin", "Previous point", "Angle", "Axis"], correct: 1 },
-        { question: "Polar coordinates use:", options: ["X,Y", "Distance & angle", "Only angle", "Only distance"], correct: 1 },
-        { question: "Polar format is:", options: ["@X,Y", "@D<A", "X,Y", "None"], correct: 1 },
-        { question: "Example @10<90 means:", options: ["Right", "Up", "Left", "Down"], correct: 1 },
-        { question: "In 2D drawing, unused axis is:", options: ["X", "Y", "Z", "None"], correct: 2 },
-        { question: "0° direction is:", options: ["Right", "Up", "Left", "Down"], correct: 0 },
-        { question: "180° direction is:", options: ["Right", "Left", "Up", "Down"], correct: 1 }
-    ],
-
-    // الفصل السادس: AutoCAD Modify Commands (30 سؤال)
-    6: [
-        { question: "LINE command is used to:", options: ["Draw circles", "Draw lines", "Delete", "Rotate"], correct: 1 },
-        { question: "LINE shortcut:", options: ["L", "LN", "LI", "LE"], correct: 0 },
-        { question: "LINE command works by:", options: ["One point", "Multiple points", "Radius", "Angle"], correct: 1 },
-        { question: "CIRCLE command is used to:", options: ["Draw circles", "Draw lines", "Copy", "Move"], correct: 0 },
-        { question: "Default circle method:", options: ["Diameter", "Center and radius", "3 points", "Arc"], correct: 1 },
-        { question: "Circle can be created using:", options: ["Only radius", "Multiple methods", "Only diameter", "Only points"], correct: 1 },
-        { question: "POLYLINE is:", options: ["Single line", "Connected segments", "Circle", "Arc"], correct: 1 },
-        { question: "POLYLINE shortcut:", options: ["PL", "PO", "PN", "PY"], correct: 0 },
-        { question: "POLYLINE creates:", options: ["Separate lines", "One object", "Circle", "Arc"], correct: 1 },
-        { question: "RECTANGLE command:", options: ["Draws circle", "Draws closed rectangle", "Draws arc", "Deletes"], correct: 1 },
-        { question: "RECTANGLE shortcut:", options: ["R", "REC", "RE", "RT"], correct: 1 },
-        { question: "EXPLODE command:", options: ["Deletes object", "Breaks object into parts", "Moves", "Rotates"], correct: 1 },
-        { question: "MOVE command:", options: ["Moves object", "Copies", "Deletes", "Rotates"], correct: 0 },
-        { question: "COPY command:", options: ["Moves", "Duplicates objects", "Deletes", "Rotates"], correct: 1 },
-        { question: "ROTATE command:", options: ["Moves", "Rotates object", "Deletes", "Copies"], correct: 1 },
-        { question: "OFFSET command:", options: ["Deletes", "Creates parallel copies", "Rotates", "Moves"], correct: 1 },
-        { question: "TRIM command:", options: ["Extends", "Cuts extra parts", "Copies", "Moves"], correct: 1 },
-        { question: "EXTEND command:", options: ["Shortens", "Lengthens objects", "Deletes", "Copies"], correct: 1 },
-        { question: "FILLET command:", options: ["Sharp edge", "Rounded corner", "Delete", "Move"], correct: 1 },
-        { question: "CHAMFER command:", options: ["Curve", "Angled edge", "Circle", "Copy"], correct: 1 },
-        { question: "ERASE command:", options: ["Copies", "Deletes object", "Rotates", "Offset"], correct: 1 },
-        { question: "MODIFY toolbar is used for:", options: ["Drawing only", "Editing objects", "Printing", "Saving"], correct: 1 },
-        { question: "TRIM removes:", options: ["Whole object", "Extra parts of object", "Layers", "Colors"], correct: 1 },
-        { question: "OFFSET creates:", options: ["Circles", "Parallel objects", "Angles", "Points"], correct: 1 },
-        { question: "ROTATE requires:", options: ["Radius", "Base point", "Length", "Axis"], correct: 1 },
-        { question: "COPY creates:", options: ["One object", "Multiple duplicates", "Deletes", "Rotates"], correct: 1 },
-        { question: "EXPLODE converts:", options: ["Lines to circle", "Object to separate parts", "Copy", "Rotate"], correct: 1 },
-        { question: "RECTANGLE creates:", options: ["Open shape", "Closed polyline", "Circle", "Arc"], correct: 1 },
-        { question: "POLYLINE is useful for:", options: ["Separate objects", "Continuous paths", "Printing", "Deleting"], correct: 1 },
-        { question: "LINE command starts by:", options: ["Radius", "First point selection", "Angle", "Offset"], correct: 1 }
-    ],
-
-    // الفصل السابع: Software Tools for Line Drawing (CAD) - 30 سؤال
-    7: [
-        { question: "What does CAD stand for?", options: ["Computer Automatic Design", "Computer-Aided Drawing", "Creative Architectural Drawing", "Computer Application Drafting"], correct: 1 },
-        { question: "AutoCAD supports creating:", options: ["Only 2D drawings", "Only 3D drawings", "Both 2D and 3D drawings", "Only animations"], correct: 2 },
-        { question: "AutoCAD became available as a web application in:", options: ["1995", "2000", "2010", "2020"], correct: 2 },
-        { question: "Which command is used to draw straight lines?", options: ["ARC", "LINE", "SPLINE", "OFFSET"], correct: 1 },
-        { question: "Which key ends the LINE command?", options: ["Ctrl", "Shift", "Enter", "Delete"], correct: 2 },
-        { question: "Which command closes a line shape?", options: ["P", "L", "C", "R"], correct: 2 },
-        { question: "Which key is used to undo line drawing steps?", options: ["Y", "Z", "U", "X"], correct: 2 },
-        { question: "Dynamic Input drawing depends mainly on:", options: ["Images", "Coordinates and angles", "Voice commands", "Colors"], correct: 1 },
-        { question: "Which key switches between coordinate and angle fields?", options: ["Space", "Tab", "Alt", "Esc"], correct: 1 },
-        { question: "The Polyline command creates:", options: ["Independent lines", "Connected segments treated as one object", "Multiple circles", "Random points"], correct: 1 },
-        { question: "A polyline object is treated as:", options: ["Multiple separate objects", "One single element", "A layer", "A dimension"], correct: 1 },
-        { question: "Which tab contains the Polyline command?", options: ["Insert", "Home", "View", "Output"], correct: 1 },
-        { question: "The default arc drawing method uses:", options: ["One point", "Two points", "Three points", "Four points"], correct: 2 },
-        { question: "What is selected second while drawing an arc?", options: ["Radius", "Upper middle point", "Diameter", "Layer"], correct: 1 },
-        { question: "Layers are similar to:", options: ["Music tracks", "Transparent drawings placed over each other", "Internet pages", "Spreadsheets"], correct: 1 },
-        { question: "Layers are used to:", options: ["Install programs", "Classify drawing elements", "Delete drawings", "Animate objects"], correct: 1 },
-        { question: "Which layer exists by default in AutoCAD?", options: ["Main", "Layer1", "Zero (0)", "Basic"], correct: 2 },
-        { question: "The default layer Zero (0):", options: ["Can be deleted", "Can be renamed", "Cannot be deleted or renamed", "Is hidden automatically"], correct: 2 },
-        { question: "Which command creates a new layer?", options: ["Freeze", "Set Current", "Create New Layer", "Delete Layer"], correct: 2 },
-        { question: "Which command makes a layer active?", options: ["Set Current", "Freeze", "Print", "Lock"], correct: 0 },
-        { question: "A locked layer:", options: ["Becomes invisible", "Cannot be modified", "Is deleted", "Changes color automatically"], correct: 1 },
-        { question: "Which command hides all objects in a layer?", options: ["Hatch", "On/Off", "Arc", "Polyline"], correct: 1 },
-        { question: "Which command prevents a layer from being modified and displayed?", options: ["Freeze", "Offset", "Distance", "Measure"], correct: 0 },
-        { question: "The active layer:", options: ["Can always be frozen", "Cannot be frozen directly", "Has no objects", "Is automatically deleted"], correct: 1 },
-        { question: "Which property controls line thickness?", options: ["Line Type", "Line Weight", "Status", "Layer Name"], correct: 1 },
-        { question: "Which property controls dashed and dotted lines?", options: ["Freeze", "Line Type", "Hatch", "Weight"], correct: 1 },
-        { question: "Which property changes line color?", options: ["Line Color", "Line Weight", "Set Current", "Freeze"], correct: 0 },
-        { question: "The default line thickness in AutoCAD is:", options: ["5", "10", "1", "0"], correct: 3 },
-        { question: "Which command loads extra line styles?", options: ["Continue", "Load", "Draw", "Extend"], correct: 1 },
-        { question: "Which line type is mentioned in the lecture?", options: ["Zigzag", "Dashed", "Spiral", "Double"], correct: 1 }
-    ],
-
-    // الفصل الثامن: Software Tools for 2D Shapes Drawing - 30 سؤال
-    8: [
-        { question: "Which command measures the distance between two points?", options: ["Hatch", "Distance", "Polygon", "Offset"], correct: 1 },
-        { question: "Quick Measure automatically displays:", options: ["Colors", "Measurements and angles", "Layers", "Fonts"], correct: 1 },
-        { question: "The Command Window is located:", options: ["At the top", "At the center", "At the bottom of the screen", "Outside the interface"], correct: 2 },
-        { question: "The Status Bar contains:", options: ["Games", "Drawing helper tools", "Music controls", "Web browser tools"], correct: 1 },
-        { question: "Drawing accuracy is improved by:", options: ["Snapping to geometric points", "Printing frequently", "Using colors", "Closing the program"], correct: 0 },
-        { question: "Which command allows drawing at fixed angles?", options: ["Hatch", "Ortho-related angle tool", "Array", "Chamfer"], correct: 1 },
-        { question: "Which icon is used to draw rectangles?", options: ["Circle", "Rectangle", "Arc", "Hatch"], correct: 1 },
-        { question: "Rectangle drawing requires selecting:", options: ["One point", "Two opposite corners", "Three points", "Radius only"], correct: 1 },
-        { question: "Which option creates beveled rectangle corners?", options: ["Fillet", "Chamfer", "Offset", "Radius"], correct: 1 },
-        { question: "Which option creates rounded rectangle corners?", options: ["Hatch", "Fillet", "Distance", "Array"], correct: 1 },
-        { question: "Polygon command creates:", options: ["Irregular curves", "Regular polygons", "Only triangles", "Only circles"], correct: 1 },
-        { question: "Polygon sides can range from:", options: ["1 to 50", "2 to 500", "3 to 1024", "5 to 100"], correct: 2 },
-        { question: "Inscribed in Circle means:", options: ["Polygon outside the circle", "Circle touches polygon sides externally", "Circle passes through polygon vertices", "Polygon has no center"], correct: 2 },
-        { question: "Spline command creates:", options: ["Sharp corners", "Smooth curves", "Layers", "3D objects"], correct: 1 },
-        { question: "Hatch command is used to:", options: ["Delete objects", "Fill closed spaces", "Rotate drawings", "Scale layers"], correct: 1 },
-        { question: "Which Hatch type uses predefined patterns?", options: ["Gradient", "Solid", "Pattern", "Quick"], correct: 2 },
-        { question: "Which Hatch type fills an area with one color?", options: ["Pattern", "Solid", "Gradient", "User Defined"], correct: 1 },
-        { question: "Which Hatch type blends two colors?", options: ["Radius", "Gradient", "Continue", "Diameter"], correct: 1 },
-        { question: "The Array command creates:", options: ["Dimensions", "Multiple copies", "Layers", "Arcs"], correct: 1 },
-        { question: "Which Array type distributes objects around a circle?", options: ["Rectangular Array", "Path Array", "Polar Array", "Dynamic Array"], correct: 2 },
-        { question: "Offset command creates:", options: ["Copies at a specified distance", "3D walls", "Layers", "Curves only"], correct: 0 },
-        { question: "Dimensions are used to display:", options: ["Colors", "Measurements", "Materials", "Layers"], correct: 1 },
-        { question: "Dimension tools are found in which tab?", options: ["Insert", "View", "Annotate", "Render"], correct: 2 },
-        { question: "Which is a type of dimension?", options: ["Radius", "Gradient", "Hatch", "Spline"], correct: 0 },
-        { question: "Which dimension type measures angles?", options: ["Linear", "Angular", "Radius", "Baseline"], correct: 1 },
-        { question: "Which dimension type measures straight distances?", options: ["Linear", "Arc Length", "Diameter", "Quick"], correct: 0 },
-        { question: "Which dimension type measures circles using the center to edge distance?", options: ["Diameter", "Radius", "Continue", "Baseline"], correct: 1 },
-        { question: "Which command is commonly used for construction detail shading?", options: ["Polygon", "Hatch", "Offset", "Array"], correct: 1 },
-        { question: "Polar Array requires selecting:", options: ["A center point", "A printer", "A layer name", "A hatch pattern"], correct: 0 },
-        { question: "Offset can work with:", options: ["Lines and circles only", "Pre-drawn elements", "Layers only", "Text only"], correct: 1 }
-    ],
-
-    // الفصل التاسع: 3D Modeling Basics - 30 سؤال
-    9: [
-        { question: "AutoCAD can create which types of 3D models?", options: ["Lines, Arcs, Layers", "Solids, Surfaces, Meshes", "Dimensions, Hatch, Arrays", "Circles, Splines, Boxes"], correct: 1 },
-        { question: "Solids possess:", options: ["No properties", "Physical properties", "Only color", "Only transparency"], correct: 1 },
-        { question: "Surfaces have:", options: ["Thickness", "Mass", "No thickness", "Infinite weight"], correct: 2 },
-        { question: "Meshes are commonly used in:", options: ["Banking", "Games and movies", "Accounting", "Word processing"], correct: 1 },
-        { question: "Which workspace contains all 3D modeling tools?", options: ["Drafting", "3D Basics", "3D Modeling", "Annotate"], correct: 2 },
-        { question: "Which workspace contains commonly used 3D tools?", options: ["Hatch", "3D Basics", "Insert", "Output"], correct: 1 },
-        { question: "The Workspace drop-down is found on:", options: ["Status bar only", "Quick Access Toolbar", "Ribbon bottom", "Command line"], correct: 1 },
-        { question: "Which template starts a 3D Modeling workspace?", options: ["acad2D.dwt", "acadiso3D.dwt", "hatch.dwt", "layer.dwt"], correct: 1 },
-        { question: "The View Cube is located at the:", options: ["Bottom right", "Top right", "Bottom center", "Top left"], correct: 1 },
-        { question: "The View Cube is used to:", options: ["Print drawings", "Modify model views", "Delete objects", "Create layers"], correct: 1 },
-        { question: "Which tab contains solid modeling tools?", options: ["Surface", "Mesh", "Solid", "Insert"], correct: 2 },
-        { question: "Which tab creates realistic images?", options: ["Visualize", "Mesh", "Annotate", "Layers"], correct: 0 },
-        { question: "The Box tool creates objects with:", options: ["Circular faces", "Six rectangular or square faces", "Triangular faces only", "One face only"], correct: 1 },
-        { question: "Which command creates cylinders?", options: ["BOX", "CYLINDER", "HATCH", "OFFSET"], correct: 1 },
-        { question: "A cylinder may be:", options: ["Circular or elliptical", "Hexagonal only", "Triangular only", "Flat only"], correct: 0 },
-        { question: "A torus is shaped like:", options: ["A cube", "A pyramid", "A donut", "A cone"], correct: 2 },
-        { question: "Which primitive has a polygon base?", options: ["Sphere", "Pyramid", "Cylinder", "Torus"], correct: 1 },
-        { question: "A sphere requires specifying:", options: ["Width only", "Radius or diameter", "Layer type", "Hatch style"], correct: 1 },
-        { question: "Which primitive uses tube radius?", options: ["Pyramid", "Box", "Torus", "Cone"], correct: 2 },
-        { question: "Which command creates 3D walls?", options: ["Extrude", "Polysolid", "Array", "Dimension"], correct: 1 },
-        { question: "Polysolid can convert which objects into walls?", options: ["Only text", "Line, arc, polyline, or circle", "Only dimensions", "Only hatches"], correct: 1 },
-        { question: "Which mode should be activated while using Polysolid?", options: ["Snap", "Ortho", "Hatch", "Render"], correct: 1 },
-        { question: "The Extrude tool adds:", options: ["Color", "Transparency", "Height", "Rotation"], correct: 2 },
-        { question: "Extruding a closed shape creates:", options: ["A surface", "A solid", "A layer", "A hatch"], correct: 1 },
-        { question: "Extruding an open sketch creates:", options: ["A surface", "A solid", "A box", "A torus"], correct: 0 },
-        { question: "Which sketch tool was used before Extrude in the example?", options: ["Circle", "Polyline", "Hatch", "Array"], correct: 1 },
-        { question: "Which view orientation was selected before extrusion?", options: ["Top", "Front", "Bottom", "Right"], correct: 1 },
-        { question: "SE Isometric stands for:", options: ["South East Isometric", "South Edge Internal", "Side External Isometric", "Standard Engineering Isometric"], correct: 0 },
-        { question: "Which control changes model display styles?", options: ["In-canvas controls", "Layer manager", "Hatch editor", "Command history"], correct: 0 },
-        { question: "Which view style was applied to the box example?", options: ["Wireframe", "Shades of Grey", "Hidden", "Transparent"], correct: 1 }
-    ]
+  "1": [
+    {
+      "id": 1,
+      "chapter": 1,
+      "topic": "Introduction",
+      "type": "mcq",
+      "question": "Which statement best defines a drawing in engineering graphics?",
+      "options": [
+        "A graphic representation of a real thing, an idea, or a proposed design",
+        "A list of written instructions without a graphic representation",
+        "A finished manufactured object",
+        "A numerical table only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines drawing as a graphic representation of a real thing, an idea, or a proposed design for later manufacturing or construction.",
+      "explanationAr": "تعرف المحاضرة الرسم بأنه تمثيل رسومي لشيء حقيقي أو فكرة أو تصميم مقترح بغرض التصنيع أو الإنشاء لاحقًا.",
+      "image": null
+    },
+    {
+      "id": 2,
+      "chapter": 1,
+      "topic": "Introduction",
+      "type": "mcq",
+      "question": "Why is graphics language effective for technical communication?",
+      "options": [
+        "Words alone may not describe size, shape and features completely and concisely",
+        "It removes the need to show shape",
+        "It communicates emotions only",
+        "It is used only to decorate a page"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture demonstrates that word descriptions are inadequate for communicating an object’s size, shape and features completely and concisely.",
+      "explanationAr": "توضح المحاضرة أن الوصف بالكلمات وحده لا يكفي لشرح حجم الجسم وشكله وخصائصه بصورة كاملة وموجزة.",
+      "image": null
+    },
+    {
+      "id": 3,
+      "chapter": 1,
+      "topic": "Drawing methods",
+      "type": "mcq",
+      "question": "In freehand drawing, lines are sketched using:",
+      "options": [
+        "Pencils and erasers without other drawing instruments",
+        "A compass and a T-square only",
+        "CAD software only",
+        "A printer only"
+      ],
+      "correct": 0,
+      "explanationEn": "The freehand drawing slide says lines are sketched without instruments other than pencils and erasers.",
+      "explanationAr": "تذكر سلايد الرسم الحر أن الخطوط تُرسم دون أدوات أخرى غير الأقلام والممحاة.",
+      "image": null
+    },
+    {
+      "id": 4,
+      "chapter": 1,
+      "topic": "Drawing methods",
+      "type": "mcq",
+      "question": "Instrument drawing is described as a method that uses instruments to draw:",
+      "options": [
+        "Straight lines, circles and curves accurately",
+        "Only decorative patterns",
+        "Only handwritten paragraphs",
+        "Only shaded photographs"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says drawing instruments are used to draw straight lines, circles and curves concisely and accurately.",
+      "explanationAr": "تذكر المحاضرة أن أدوات الرسم تُستخدم لرسم الخطوط المستقيمة والدوائر والمنحنيات بدقة واختصار.",
+      "image": null
+    },
+    {
+      "id": 5,
+      "chapter": 1,
+      "topic": "Drawing methods",
+      "type": "mcq",
+      "question": "Which set contains software examples used for computer drawing in the course material?",
+      "options": [
+        "AutoCAD, SolidWorks and CATIA",
+        "Word, PowerPoint and Excel",
+        "Photoshop, Premiere and Audition",
+        "Chrome, Firefox and Edge"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture lists AutoCAD, SolidWorks and CATIA as examples of commercial drawing software.",
+      "explanationAr": "تذكر المحاضرة AutoCAD وSolidWorks وCATIA أمثلةً لبرامج الرسم التجارية.",
+      "image": null
+    },
+    {
+      "id": 6,
+      "chapter": 1,
+      "topic": "Drawing types",
+      "type": "mcq",
+      "question": "According to the lecture, technical drawing should:",
+      "options": [
+        "Communicate the same message to every user or reader",
+        "Be interpreted differently by every reader",
+        "Communicate emotion rather than technical details",
+        "Avoid using standard representations"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that technical drawing must communicate the same message to every reader.",
+      "explanationAr": "تذكر المحاضرة أن الرسم الفني يجب أن ينقل الرسالة نفسها إلى كل قارئ.",
+      "image": null
+    },
+    {
+      "id": 7,
+      "chapter": 1,
+      "topic": "Drawing types",
+      "type": "mcq",
+      "question": "How does the lecture contrast artistic drawing with technical drawing?",
+      "options": [
+        "Artistic drawing may be interpreted differently by different viewers",
+        "Artistic drawing always has a fully accurate scale",
+        "Technical drawing is interpreted differently by everyone",
+        "Both must communicate exactly the same message in every case"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says artistic drawing is usually interpreted differently by everyone who sees it.",
+      "explanationAr": "تذكر السلايد أن الرسم الفني غالبًا ما يفسره المشاهدون بطرق مختلفة.",
+      "image": null
+    },
+    {
+      "id": 8,
+      "chapter": 1,
+      "topic": "Design process",
+      "type": "mcq",
+      "question": "In the design process diagram, what is one purpose of visualization?",
+      "options": [
+        "To mentally picture things that do not yet exist",
+        "To replace all communication",
+        "To calculate paper weight",
+        "To select a pencil grade only"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide describes visualization as the ability to mentally picture things that do not exist.",
+      "explanationAr": "تصف السلايد التصور بأنه القدرة على تخيل أشياء غير موجودة بعد.",
+      "image": null
+    },
+    {
+      "id": 9,
+      "chapter": 1,
+      "topic": "Engineering applications",
+      "type": "mcq",
+      "question": "According to Chapter 1, engineers use technical means to:",
+      "options": [
+        "Solve problems and design products, systems, devices and structures",
+        "Produce artistic images only",
+        "Write stories only",
+        "Make drawings without a purpose"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines engineers as people who use technical means to solve problems and design products, systems, devices and structures.",
+      "explanationAr": "تعرف المحاضرة المهندسين بأنهم يستخدمون وسائل تقنية لحل المشكلات وتصميم المنتجات والأنظمة والأجهزة والمنشآت.",
+      "image": null
+    },
+    {
+      "id": 10,
+      "chapter": 1,
+      "topic": "Drawing standards",
+      "type": "mcq",
+      "question": "Drawing standards are:",
+      "options": [
+        "Sets of rules that govern how technical drawings are represented",
+        "Optional colour palettes only",
+        "Lists of drawing prices",
+        "Rules for artistic shading only"
+      ],
+      "correct": 0,
+      "explanationEn": "The standards slide defines drawing standards as rules governing representation in technical drawings.",
+      "explanationAr": "تعرف سلايد المعايير معايير الرسم بأنها قواعد تنظم طريقة تمثيل الرسومات الفنية.",
+      "image": null
+    },
+    {
+      "id": 11,
+      "chapter": 1,
+      "topic": "Drawing scales",
+      "type": "mcq",
+      "question": "A scale of 1:1 represents:",
+      "options": [
+        "Full size",
+        "Enlargement",
+        "Reduction",
+        "An approximate sketch only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture labels SCALE 1:1 as full size.",
+      "explanationAr": "تسمي المحاضرة المقياس 1:1 مقياس الحجم الكامل.",
+      "image": null
+    },
+    {
+      "id": 12,
+      "chapter": 1,
+      "topic": "Drawing scales",
+      "type": "mcq",
+      "question": "According to the scale slide, X:1 where X > 1 represents:",
+      "options": [
+        "Enlargement",
+        "Reduction",
+        "Full size",
+        "A paper size"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide labels SCALE X:1 (X > 1) as an enlargement scale.",
+      "explanationAr": "تسمي السلايد المقياس X:1 عندما تكون X أكبر من 1 مقياس تكبير.",
+      "image": null
+    },
+    {
+      "id": 13,
+      "chapter": 1,
+      "topic": "Drawing scales",
+      "type": "mcq",
+      "question": "According to the scale slide, 1:X where X > 1 represents:",
+      "options": [
+        "Reduction",
+        "Enlargement",
+        "Full size",
+        "No scale"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide labels SCALE 1:X (X > 1) as a reduction scale.",
+      "explanationAr": "تسمي السلايد المقياس 1:X عندما تكون X أكبر من 1 مقياس تصغير.",
+      "image": null
+    },
+    {
+      "id": 14,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "Which instrument is used to guide horizontal lines in technical drawing?",
+      "options": [
+        "T-square",
+        "Micrometer",
+        "Vernier caliper",
+        "Soldering iron"
+      ],
+      "correct": 0,
+      "explanationEn": "The drawing-tools slide explicitly labels a T-square.",
+      "explanationAr": "تسمي سلايد أدوات الرسم مسطرة T-square صراحةً.",
+      "image": null
+    },
+    {
+      "id": 15,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "Which instrument is shown for drawing circles?",
+      "options": [
+        "Compass",
+        "T-square",
+        "Adhesive tape",
+        "Divider only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture includes a compass among the drawing instruments and describes how to prepare and use it.",
+      "explanationAr": "تدرج المحاضرة الفرجار ضمن أدوات الرسم وتشرح كيفية تجهيزه واستخدامه.",
+      "image": null
+    },
+    {
+      "id": 16,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "When setting up a compass, how should the needle and lead tips be adjusted?",
+      "options": [
+        "The needle should extend slightly more than the lead",
+        "The lead should extend far beyond the needle",
+        "Both tips must be removed",
+        "The tips must never touch the paper"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says the needle should extend slightly more than the lead.",
+      "explanationAr": "تذكر المحاضرة أن يمتد سن الإبرة قليلًا أكثر من سن القلم.",
+      "image": null
+    },
+    {
+      "id": 17,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "Which of these is also labelled in the drawing-tools slides?",
+      "options": [
+        "Protractor",
+        "Thermometer",
+        "Hacksaw",
+        "Soldering iron"
+      ],
+      "correct": 0,
+      "explanationEn": "A protractor is explicitly labelled in the drawing-tools slide.",
+      "explanationAr": "تظهر المنقلة (Protractor) صراحة في سلايد أدوات الرسم.",
+      "image": null
+    },
+    {
+      "id": 18,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "Which pair consists of drawing tools identified in the course material?",
+      "options": [
+        "Divider and circle template",
+        "Caliper and micrometer only",
+        "Hammer and chisel",
+        "Welding mask and torch"
+      ],
+      "correct": 0,
+      "explanationEn": "The slides show a divider and a circle template among the drawing tools.",
+      "explanationAr": "تعرض السلايدات الفرجار الفاصل وقالب الدوائر ضمن أدوات الرسم.",
+      "image": null
+    },
+    {
+      "id": 19,
+      "chapter": 1,
+      "topic": "Drawing tools",
+      "type": "mcq",
+      "question": "Which factors contribute to accurate drawing with instruments?",
+      "options": [
+        "Knowledge, skill and practice help produce accurate drawings",
+        "Instruments guarantee accuracy without practice",
+        "Only expensive instruments matter",
+        "Instruments are not needed for technical drawings"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture emphasizes knowledge, skill and practice in using a variety of instruments.",
+      "explanationAr": "تؤكد المحاضرة أهمية المعرفة والمهارة والتدريب عند استخدام أدوات الرسم المختلفة.",
+      "image": null
+    },
+    {
+      "id": 20,
+      "chapter": 1,
+      "topic": "Drawing sheets",
+      "type": "matching",
+      "question": "Match each drawing-sheet element with its function.",
+      "options": [
+        "The heaviest peripheral line that encloses the drawing",
+        "A box containing drawing identification and administrative details",
+        "The lightest line used to guide letter height",
+        "The ratio between a drawing dimension and the actual dimension"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Border line",
+          "The heaviest peripheral line that encloses the drawing"
+        ],
+        [
+          "Title block",
+          "A box containing drawing identification and administrative details"
+        ],
+        [
+          "Guide line",
+          "The lightest line used to guide letter height"
+        ],
+        [
+          "Drawing scale",
+          "The ratio between a drawing dimension and the actual dimension"
+        ]
+      ],
+      "explanationEn": "Each term is matched to the definition given in the Chapter 1 slides.",
+      "explanationAr": "يرتبط كل مصطلح بالتعريف الوارد له في شرائح الفصل الأول.",
+      "image": null
+    },
+    {
+      "id": 21,
+      "chapter": 1,
+      "topic": "Drawing standards",
+      "type": "matching",
+      "question": "Match each standards abbreviation with the organization or standard named in the lecture.",
+      "options": [
+        "American National Standard Institute",
+        "Japanese Industrial Standard",
+        "British Standard",
+        "Australian Standard",
+        "Deutsches Institut für Normung",
+        "International Standards Organization"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "ANSI",
+          "American National Standard Institute"
+        ],
+        [
+          "JIS",
+          "Japanese Industrial Standard"
+        ],
+        [
+          "BS",
+          "British Standard"
+        ],
+        [
+          "AS",
+          "Australian Standard"
+        ],
+        [
+          "DIN",
+          "Deutsches Institut für Normung"
+        ],
+        [
+          "ISO",
+          "International Standards Organization"
+        ]
+      ],
+      "explanationEn": "These abbreviations and names are paired as presented in the Chapter 1 standards table.",
+      "explanationAr": "تُطابق هذه الاختصارات مع الأسماء كما وردت في جدول المعايير في الفصل الأول.",
+      "image": null
+    },
+    {
+      "id": 22,
+      "chapter": 1,
+      "topic": "Drawing-sheet sizes",
+      "type": "matching",
+      "question": "Match each ISO A-series sheet size with the dimensions listed in the lecture.",
+      "options": [
+        "841 × 1189 mm",
+        "594 × 841 mm",
+        "420 × 594 mm",
+        "297 × 420 mm",
+        "210 × 297 mm"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "A0",
+          "841 × 1189 mm"
+        ],
+        [
+          "A1",
+          "594 × 841 mm"
+        ],
+        [
+          "A2",
+          "420 × 594 mm"
+        ],
+        [
+          "A3",
+          "297 × 420 mm"
+        ],
+        [
+          "A4",
+          "210 × 297 mm"
+        ]
+      ],
+      "explanationEn": "The dimensions follow the ISO A-series sheet-size table in Chapter 1.",
+      "explanationAr": "تتبع الأبعاد جدول أحجام أوراق سلسلة ISO A في الفصل الأول.",
+      "image": null
+    },
+    {
+      "id": 23,
+      "chapter": 1,
+      "topic": "Drawing standards by country",
+      "type": "matching",
+      "question": "Match each country or scope with the standard abbreviation shown in the lecture.",
+      "options": [
+        "ANSI",
+        "JIS",
+        "BS",
+        "AS",
+        "DIN",
+        "ISO"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "United States",
+          "ANSI"
+        ],
+        [
+          "Japan",
+          "JIS"
+        ],
+        [
+          "United Kingdom",
+          "BS"
+        ],
+        [
+          "Australia",
+          "AS"
+        ],
+        [
+          "Germany",
+          "DIN"
+        ],
+        [
+          "International",
+          "ISO"
+        ]
+      ],
+      "explanationEn": "The country or scope and standard abbreviation are paired according to the Chapter 1 table.",
+      "explanationAr": "تُطابق الدولة أو النطاق مع اختصار المعيار وفق جدول الفصل الأول.",
+      "image": null
+    },
+    {
+      "id": 24,
+      "chapter": 1,
+      "topic": "Pencil grades",
+      "type": "matching",
+      "question": "Match each drawing requirement with the pencil grade stated in the lecture.",
+      "options": [
+        "2H or HB",
+        "4H",
+        "H-grade side"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Thick lines",
+          "2H or HB"
+        ],
+        [
+          "Thin lines",
+          "4H"
+        ],
+        [
+          "Hardest end of the grade scale",
+          "H-grade side"
+        ]
+      ],
+      "explanationEn": "The Chapter 1 pencil slide associates 2H or HB with thick lines and 4H with thin lines; the H end is the harder end of the scale.",
+      "explanationAr": "تربط سلايد الأقلام في الفصل الأول الدرجة 2H أو HB بالخطوط السميكة والدرجة 4H بالخطوط الرفيعة، ويشير طرف H إلى الدرجات الأشد صلابة.",
+      "image": null
+    }
+  ],
+  "2": [
+    {
+      "id": 25,
+      "chapter": 2,
+      "topic": "Hidden lines",
+      "type": "mcq",
+      "question": "What rule does the lecture give for the start and end of hidden lines?",
+      "options": [
+        "A dash should start and end the line except at a parallel visible or hidden line",
+        "A hidden line must always start with a gap",
+        "Every hidden line must end with an arrow",
+        "Hidden lines should be drawn as circles"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says a dash should start and end hidden lines except where the line begins or terminates at a parallel visible or hidden line.",
+      "explanationAr": "تذكر السلايد أن يبدأ الخط المخفي وينتهي بشرطة، باستثناء موضع بدايته أو نهايته عند خط ظاهر أو مخفي موازٍ.",
+      "image": null
+    },
+    {
+      "id": 26,
+      "chapter": 2,
+      "topic": "Hidden lines",
+      "type": "mcq",
+      "question": "What does the lecture say about hidden-line dashes at corners?",
+      "options": [
+        "The dashes should meet in the corners",
+        "They must stop far from every corner",
+        "They should form circles",
+        "They should be replaced with arrows"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that hidden-line dashes should meet in the corners.",
+      "explanationAr": "تذكر المحاضرة أن شرطات الخطوط المخفية ينبغي أن تلتقي عند الزوايا.",
+      "image": null
+    },
+    {
+      "id": 27,
+      "chapter": 2,
+      "topic": "Section lines",
+      "type": "mcq",
+      "question": "At what angle does the lecture say a section/hatching line is drawn?",
+      "options": [
+        "45°",
+        "30°",
+        "60°",
+        "90°"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says a thin section line is drawn at 45 degrees.",
+      "explanationAr": "تذكر السلايد أن خط التهشير الرفيع يُرسم بزاوية 45 درجة.",
+      "image": null
+    },
+    {
+      "id": 28,
+      "chapter": 2,
+      "topic": "Center lines",
+      "type": "mcq",
+      "question": "Which pattern describes a center line in the lecture?",
+      "options": [
+        "Alternating long and short dashes",
+        "Only short equal dashes",
+        "A continuous thick line",
+        "A thick wavy line"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture describes center lines as thin lines made of alternating long and short dashes.",
+      "explanationAr": "تصف المحاضرة خطوط المركز بأنها رفيعة وتتكون من شرطات طويلة وقصيرة متناوبة.",
+      "image": null
+    },
+    {
+      "id": 29,
+      "chapter": 2,
+      "topic": "Dimension lines",
+      "type": "mcq",
+      "question": "What is shown at the ends of dimension lines?",
+      "options": [
+        "Arrowheads",
+        "Pairs of short dashes",
+        "Wavy ends",
+        "Circular markers only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture describes dimension lines as thin lines with arrowheads at their ends.",
+      "explanationAr": "تصف المحاضرة خطوط الأبعاد بأنها خطوط رفيعة ذات رؤوس أسهم عند الأطراف.",
+      "image": null
+    },
+    {
+      "id": 30,
+      "chapter": 2,
+      "topic": "Extension lines",
+      "type": "mcq",
+      "question": "According to the lecture, how far should an extension line begin from the object?",
+      "options": [
+        "1.5 mm",
+        "3 mm",
+        "6 mm",
+        "10 mm"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says extension lines begin 1.5 mm away from the object.",
+      "explanationAr": "تذكر السلايد أن يبدأ خط الامتداد على بعد 1.5 مليمتر من الجسم.",
+      "image": null
+    },
+    {
+      "id": 31,
+      "chapter": 2,
+      "topic": "Extension lines",
+      "type": "mcq",
+      "question": "How far should an extension line extend beyond the last dimension according to the slide?",
+      "options": [
+        "3 mm",
+        "1.5 mm",
+        "6 mm",
+        "12 mm"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says the extension line should reach 3 mm beyond the last dimension.",
+      "explanationAr": "تذكر المحاضرة أن يمتد خط الامتداد 3 مليمترات بعد آخر بُعد.",
+      "image": null
+    },
+    {
+      "id": 32,
+      "chapter": 2,
+      "topic": "Leader lines",
+      "type": "mcq",
+      "question": "Which lines should not be parallel to leader lines according to the lecture?",
+      "options": [
+        "Dimension, extension and section lines",
+        "Visible and hidden lines only",
+        "Center and symmetry lines only",
+        "Border and guide lines only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says dimension lines, extension lines and section lines should not be parallel to leader lines.",
+      "explanationAr": "تذكر المحاضرة أن خطوط الأبعاد والامتداد والقطع لا ينبغي أن تكون موازية للخطوط الإرشادية.",
+      "image": null
+    },
+    {
+      "id": 33,
+      "chapter": 2,
+      "topic": "Cutting-plane lines",
+      "type": "mcq",
+      "question": "How far do cutting-plane lines extend past the edge of the object according to the slide?",
+      "options": [
+        "6 mm",
+        "1.5 mm",
+        "3 mm",
+        "12 mm"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that cutting-plane lines extend 6 mm beyond the object edge.",
+      "explanationAr": "تذكر المحاضرة أن يمتد خط مستوى القطع 6 مليمترات بعد حافة الجسم.",
+      "image": null
+    },
+    {
+      "id": 34,
+      "chapter": 2,
+      "topic": "Cutting-plane lines",
+      "type": "mcq",
+      "question": "What do arrows on cutting-plane lines indicate?",
+      "options": [
+        "The direction of the line of sight for the section view",
+        "The object’s scale",
+        "The centre of the object",
+        "The dimension value"
+      ],
+      "correct": 0,
+      "explanationEn": "The arrows represent the direction of the line of sight for the section view and point away from the sectioned view.",
+      "explanationAr": "تمثل الأسهم اتجاه خط النظر للمنظور المقطعي وتتجه بعيدًا عن المنظور المقطوع.",
+      "image": null
+    },
+    {
+      "id": 35,
+      "chapter": 2,
+      "topic": "Break lines",
+      "type": "mcq",
+      "question": "How is a short break line described?",
+      "options": [
+        "A thick wavy line",
+        "A thin continuous line with arrows",
+        "A long dash followed by two short dashes",
+        "A thin line at 45 degrees"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture describes short break lines as thick wavy lines.",
+      "explanationAr": "تصف المحاضرة خطوط الكسر القصيرة بأنها خطوط متموجة سميكة.",
+      "image": null
+    },
+    {
+      "id": 36,
+      "chapter": 2,
+      "topic": "Break lines",
+      "type": "mcq",
+      "question": "What do long break lines indicate?",
+      "options": [
+        "The centre section of an object has been removed to allow a smaller drawing",
+        "The centre of a circle",
+        "The surface cut by hatching",
+        "The alternate location of a moving part"
+      ],
+      "correct": 0,
+      "explanationEn": "Long break lines indicate that the centre section of an object has been removed so it can be drawn on a smaller sheet.",
+      "explanationAr": "تشير خطوط الكسر الطويلة إلى حذف الجزء الأوسط من الجسم ليمكن رسمه على ورقة أصغر.",
+      "image": null
+    },
+    {
+      "id": 37,
+      "chapter": 2,
+      "topic": "Phantom lines",
+      "type": "mcq",
+      "question": "How are phantom lines described in the lecture?",
+      "options": [
+        "Thin lines with long dashes alternating with pairs of short dashes",
+        "Thick continuous lines",
+        "Short wavy lines",
+        "Only 45-degree hatching"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture describes phantom lines as thin lines made of long dashes alternating with pairs of small dashes.",
+      "explanationAr": "تصف المحاضرة الخطوط الوهمية بأنها رفيعة وتتكون من شرطات طويلة تتناوب مع أزواج من الشرطات القصيرة.",
+      "image": null
+    },
+    {
+      "id": 38,
+      "chapter": 2,
+      "topic": "Line-type identification",
+      "type": "matching",
+      "question": "Match each line type with its main application.",
+      "options": [
+        "Shows features visible in the current view",
+        "Shows features that cannot be seen in the current view",
+        "Shows the surface material cut by a cutting plane",
+        "Marks centres of circles and axes of symmetry",
+        "Indicates the size of a feature",
+        "Extends from a feature to show the limits of a dimension",
+        "Connects a note or symbol to a feature",
+        "Shows where a section is taken and its viewing direction",
+        "Indicates that part of an object has been shortened or omitted",
+        "Shows alternate positions or adjacent components",
+        "Marks an axis of symmetry"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Visible/object line",
+          "Shows features visible in the current view"
+        ],
+        [
+          "Hidden line",
+          "Shows features that cannot be seen in the current view"
+        ],
+        [
+          "Section line",
+          "Shows the surface material cut by a cutting plane"
+        ],
+        [
+          "Centre line",
+          "Marks centres of circles and axes of symmetry"
+        ],
+        [
+          "Dimension line",
+          "Indicates the size of a feature"
+        ],
+        [
+          "Extension line",
+          "Extends from a feature to show the limits of a dimension"
+        ],
+        [
+          "Leader line",
+          "Connects a note or symbol to a feature"
+        ],
+        [
+          "Cutting-plane line",
+          "Shows where a section is taken and its viewing direction"
+        ],
+        [
+          "Break line",
+          "Indicates that part of an object has been shortened or omitted"
+        ],
+        [
+          "Phantom line",
+          "Shows alternate positions or adjacent components"
+        ],
+        [
+          "Symmetry line",
+          "Marks an axis of symmetry"
+        ]
+      ],
+      "explanationEn": "Each line type has a distinct function in an engineering drawing. Match the line to the function stated in the Chapter 2 lecture.",
+      "explanationAr": "لكل نوع من الخطوط وظيفة محددة في الرسم الهندسي. طابق نوع الخط مع وظيفته كما وردت في محاضرة الفصل الثاني.",
+      "image": null
+    },
+    {
+      "id": 39,
+      "chapter": 2,
+      "topic": "Line-type appearance",
+      "type": "matching",
+      "question": "Match each line type with the appearance described in the lecture.",
+      "options": [
+        "Light, narrow, short dashes",
+        "Thin hatching at 45 degrees",
+        "Thick wavy line",
+        "Long dashes alternating with pairs of short dashes"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Hidden line",
+          "Light, narrow, short dashes"
+        ],
+        [
+          "Section line",
+          "Thin hatching at 45 degrees"
+        ],
+        [
+          "Short break line",
+          "Thick wavy line"
+        ],
+        [
+          "Phantom line",
+          "Long dashes alternating with pairs of short dashes"
+        ]
+      ],
+      "explanationEn": "Each description follows the line-appearance definitions in Chapter 2.",
+      "explanationAr": "يتبع كل وصف تعريف مظهر الخط الوارد في الفصل الثاني.",
+      "image": null
+    },
+    {
+      "id": 40,
+      "chapter": 2,
+      "topic": "Line-type drawing exercise",
+      "type": "drawing",
+      "question": "Identify each numbered line sample, reproduce it on paper, and write the corresponding line type.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "These are simplified, unlabelled practice samples of line styles covered in Chapter 2. Compare each sample with the line conventions from the course material, then label and reproduce it.",
+      "explanationAr": "هذه عينات تدريبية مبسطة وغير مسماة لأنماط الخطوط التي يغطيها الفصل الثاني. قارن كل عينة باصطلاحات الخطوط في مادة المقرر، ثم اكتب اسمها وأعد رسمها.",
+      "image": "assets/line-practice-blank.svg",
+      "sourcePage": null
+    },
+    {
+      "id": 41,
+      "chapter": 2,
+      "topic": "Line-type application",
+      "type": "drawing",
+      "question": "Sketch a simple mechanical component and annotate it with visible, hidden, centre, dimension, extension and leader lines. Use the lecture’s line conventions.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "Use dark, thick continuous lines for visible edges; short dashed lines for hidden edges; alternating long and short dashes for centre lines; thin arrow-ended lines for dimensions; extension lines to define the dimension extent; and leader lines to connect notes to features.",
+      "explanationAr": "استخدم خطوطًا متصلة داكنة وسميكة للحواف الظاهرة، وشرطات قصيرة للحواف المخفية، وشرطات طويلة وقصيرة متناوبة لخطوط المركز، وخطوطًا رفيعة ذات أسهم للأبعاد، وخطوط امتداد لتحديد مدى البعد، وخطوطًا إرشادية لربط الملاحظات بالخصائص.",
+      "image": "assets/line-annotation-task.svg",
+      "sourcePage": null
+    }
+  ],
+  "3": [
+    {
+      "id": 42,
+      "chapter": 3,
+      "topic": "2D vs 3D",
+      "type": "mcq",
+      "question": "A 2-D drawing lies on which axes according to the lecture?",
+      "options": [
+        "X and Y",
+        "X and Z only",
+        "Y and Z only",
+        "X, Y and Z"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says a 2D drawing sits only in the X and Y axes.",
+      "explanationAr": "تذكر السلايد أن الرسم ثنائي الأبعاد يقع على محوري X وY فقط.",
+      "image": null
+    },
+    {
+      "id": 43,
+      "chapter": 3,
+      "topic": "2D vs 3D",
+      "type": "mcq",
+      "question": "Which description matches a 3-D shape in the lecture?",
+      "options": [
+        "It has three dimensions: depth/height, breadth and length",
+        "It has only X and Y axes",
+        "It is always flat",
+        "It has no depth"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says 3D shapes have depth or height, breadth and length.",
+      "explanationAr": "تذكر المحاضرة أن الأشكال ثلاثية الأبعاد لها عمق أو ارتفاع وعرض وطول.",
+      "image": null
+    },
+    {
+      "id": 44,
+      "chapter": 3,
+      "topic": "Projection theory",
+      "type": "mcq",
+      "question": "What is the purpose of projection theory?",
+      "options": [
+        "To graphically represent a 3-D object on 2-D media",
+        "To turn a 2D shape into a paragraph",
+        "To remove the object’s shape",
+        "To calculate the weight of paper"
+      ],
+      "correct": 0,
+      "explanationEn": "The projection-theory slide says its purpose is to represent a 3D object graphically on 2D media such as paper or a screen.",
+      "explanationAr": "تذكر سلايد نظرية الإسقاط أن هدفها تمثيل جسم ثلاثي الأبعاد رسوميًا على وسيط ثنائي الأبعاد كالورق أو الشاشة.",
+      "image": null
+    },
+    {
+      "id": 45,
+      "chapter": 3,
+      "topic": "Projection theory",
+      "type": "mcq",
+      "question": "Which two variables form the basis of projection theory in the lecture?",
+      "options": [
+        "Line of sight and plane of projection",
+        "Scale and paper weight",
+        "Radius and diameter",
+        "Edge and vertex"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide lists line of sight and plane of projection as the two variables.",
+      "explanationAr": "تسرد السلايد خط النظر ومستوى الإسقاط بوصفهما المتغيرين الأساسيين.",
+      "image": null
+    },
+    {
+      "id": 46,
+      "chapter": 3,
+      "topic": "Projection types",
+      "type": "mcq",
+      "question": "Which two line-of-sight arrangements are used in projection theory?",
+      "options": [
+        "Parallel and convergent",
+        "Horizontal and vertical only",
+        "Visible and hidden",
+        "First angle and third angle only"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says lines of sight can be parallel or converge.",
+      "explanationAr": "تذكر السلايد أن خطوط النظر قد تكون متوازية أو متقاربة.",
+      "image": null
+    },
+    {
+      "id": 47,
+      "chapter": 3,
+      "topic": "Projection types",
+      "type": "mcq",
+      "question": "In parallel projection, the projection lines can be oriented how relative to the plane of projection?",
+      "options": [
+        "Normal (orthogonal) or oblique to the plane of projection",
+        "Only curved",
+        "Only convergent",
+        "Only horizontal"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says parallel projection lines can be normal/orthogonal or oblique to the plane.",
+      "explanationAr": "تذكر المحاضرة أن خطوط الإسقاط المتوازية قد تكون عمودية أو مائلة على مستوى الإسقاط.",
+      "image": null
+    },
+    {
+      "id": 48,
+      "chapter": 3,
+      "topic": "Projection types",
+      "type": "mcq",
+      "question": "Which projection method is considered in this course?",
+      "options": [
+        "Parallel and orthogonal projection (orthographic projection)",
+        "Convergent projection only",
+        "Oblique projection only",
+        "Perspective projection only"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture explicitly says the course considers only parallel and orthogonal projection, i.e. orthographic projection.",
+      "explanationAr": "تذكر المحاضرة صراحة أن المقرر يتناول الإسقاط المتوازي والعمودي، أي الإسقاط المتعامد.",
+      "image": null
+    },
+    {
+      "id": 49,
+      "chapter": 3,
+      "topic": "First/third angle",
+      "type": "mcq",
+      "question": "Which region is identified as a common user of first-angle projection?",
+      "options": [
+        "Europe",
+        "The USA only",
+        "Australia only",
+        "Japan only"
+      ],
+      "correct": 0,
+      "explanationEn": "The projection slide states that first-angle projection is more common in Europe.",
+      "explanationAr": "تذكر سلايد الإسقاط أن الإسقاط بالزاوية الأولى أكثر شيوعًا في أوروبا.",
+      "image": null
+    },
+    {
+      "id": 50,
+      "chapter": 3,
+      "topic": "First/third angle",
+      "type": "mcq",
+      "question": "Which regions are identified as common users of third-angle projection?",
+      "options": [
+        "Both the USA and the UK",
+        "Europe only",
+        "Japan and Australia only",
+        "Africa only"
+      ],
+      "correct": 0,
+      "explanationEn": "The projection slide states that third-angle projection is widely used in both the USA and the UK.",
+      "explanationAr": "تذكر سلايد الإسقاط أن الإسقاط بالزاوية الثالثة مستخدم على نطاق واسع في الولايات المتحدة والمملكة المتحدة.",
+      "image": null
+    },
+    {
+      "id": 51,
+      "chapter": 3,
+      "topic": "2D shapes",
+      "type": "mcq",
+      "question": "Which group contains the basic 2-D shapes named in the lecture?",
+      "options": [
+        "Circle, triangle, square, rectangle, pentagon and octagon",
+        "Cube, cone, sphere and cylinder only",
+        "Tetrahedron, cube and octahedron only",
+        "Bolt, nut and screw"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide lists circle, triangle, square, rectangle, pentagon, quadrilateral, hexagon and octagon among basic 2D shapes.",
+      "explanationAr": "تسرد السلايد الدائرة والمثلث والمربع والمستطيل والخماسي والرباعي والسداسي والثماني ضمن الأشكال ثنائية الأبعاد.",
+      "image": null
+    },
+    {
+      "id": 52,
+      "chapter": 3,
+      "topic": "2D shapes",
+      "type": "mcq",
+      "question": "According to the lecture, what makes a polygon regular?",
+      "options": [
+        "All its sides and angles are equal",
+        "Only one side is longer",
+        "It has a curved boundary",
+        "It has no sides"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says a polygon with all sides and angles equal is called a regular polygon.",
+      "explanationAr": "تذكر المحاضرة أن المضلع الذي تتساوى جميع أضلاعه وزواياه يسمى مضلعًا منتظمًا.",
+      "image": null
+    },
+    {
+      "id": 53,
+      "chapter": 3,
+      "topic": "Circle",
+      "type": "mcq",
+      "question": "What is the centre-to-boundary distance of a circle called?",
+      "options": [
+        "Radius",
+        "Diameter",
+        "Chord",
+        "Arc"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines the radius as the distance from the centre to the outer line of the circle.",
+      "explanationAr": "تعرف المحاضرة نصف القطر بأنه المسافة من المركز إلى محيط الدائرة.",
+      "image": null
+    },
+    {
+      "id": 54,
+      "chapter": 3,
+      "topic": "Circle",
+      "type": "mcq",
+      "question": "What is a diameter according to the geometric-shapes table?",
+      "options": [
+        "A line segment passing through the centre and joining two points on the circle",
+        "Any curved part of a circle",
+        "A segment that never touches the centre",
+        "The distance from the centre to the circle"
+      ],
+      "correct": 0,
+      "explanationEn": "The table defines the diameter as a line segment through the centre joining two points on the circle.",
+      "explanationAr": "يعرف الجدول القطر بأنه قطعة مستقيمة تمر بالمركز وتصل بين نقطتين على الدائرة.",
+      "image": null
+    },
+    {
+      "id": 55,
+      "chapter": 3,
+      "topic": "Circle",
+      "type": "mcq",
+      "question": "What is an arc?",
+      "options": [
+        "Any part of the curve of a circle",
+        "The longest chord",
+        "A line through the centre",
+        "A square side"
+      ],
+      "correct": 0,
+      "explanationEn": "The geometric-shapes table defines an arc as any part of the circle’s curve.",
+      "explanationAr": "يعرف جدول الأشكال الهندسية القوس بأنه أي جزء من منحنى الدائرة.",
+      "image": null
+    },
+    {
+      "id": 56,
+      "chapter": 3,
+      "topic": "Circle",
+      "type": "mcq",
+      "question": "What is a chord?",
+      "options": [
+        "A line segment joining two points on a circle, not necessarily through the centre",
+        "The distance from the centre to the boundary",
+        "The entire circular boundary",
+        "A line that cannot touch the circle"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines a chord as a segment joining two points on a circle, not necessarily passing through the centre.",
+      "explanationAr": "تعرف المحاضرة الوتر بأنه قطعة مستقيمة تصل بين نقطتين على الدائرة ولا يلزم أن تمر بالمركز.",
+      "image": null
+    },
+    {
+      "id": 57,
+      "chapter": 3,
+      "topic": "Circle and oval",
+      "type": "mcq",
+      "question": "How does the lecture distinguish an oval from a circle?",
+      "options": [
+        "Points on an oval are not all the same distance from the centre",
+        "Every point on an oval is at the same distance from the centre",
+        "An oval has four straight sides",
+        "A circle has no centre"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says the points of an oval are not all the same distance from the centre.",
+      "explanationAr": "تذكر المحاضرة أن نقاط الشكل البيضاوي ليست كلها على المسافة نفسها من المركز.",
+      "image": null
+    },
+    {
+      "id": 58,
+      "chapter": 3,
+      "topic": "Triangle",
+      "type": "mcq",
+      "question": "How many sides, edges and vertices does a triangle have according to the lecture?",
+      "options": [
+        "Three sides, three edges and three vertices",
+        "Four sides, four edges and four vertices",
+        "Five sides and five vertices",
+        "Two sides and two vertices"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture describes a triangle as a three-sided polygon with three edges and three vertices.",
+      "explanationAr": "تصف المحاضرة المثلث بأنه مضلع ثلاثي الأضلاع وله ثلاثة أحرف وثلاثة رؤوس.",
+      "image": null
+    },
+    {
+      "id": 59,
+      "chapter": 3,
+      "topic": "Triangle",
+      "type": "mcq",
+      "question": "What is the sum of the three interior angles of a triangle?",
+      "options": [
+        "180°",
+        "90°",
+        "270°",
+        "360°"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that the sum of the three angles of a triangle is 180 degrees.",
+      "explanationAr": "تذكر المحاضرة أن مجموع زوايا المثلث الثلاث 180 درجة.",
+      "image": null
+    },
+    {
+      "id": 60,
+      "chapter": 3,
+      "topic": "Trapezium",
+      "type": "mcq",
+      "question": "According to the supplied lecture, a trapezium has:",
+      "options": [
+        "One pair of opposite sides parallel and the other pair not parallel",
+        "Two pairs of opposite sides parallel by definition",
+        "Four curved sides",
+        "No parallel sides in any case"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines a trapezium as a quadrilateral with one pair of opposite sides parallel and the other pair not parallel.",
+      "explanationAr": "تعرف المحاضرة شبه المنحرف بأنه شكل رباعي له زوج واحد من الأضلاع المتقابلة المتوازية والزوج الآخر غير متوازٍ.",
+      "image": null
+    },
+    {
+      "id": 61,
+      "chapter": 3,
+      "topic": "Trapezium",
+      "type": "mcq",
+      "question": "What is an isosceles trapezium according to the lecture?",
+      "options": [
+        "A trapezium whose non-parallel sides are equal",
+        "A trapezium with no parallel sides",
+        "A square rotated by 45°",
+        "A trapezium with four equal sides"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says a trapezium with equal non-parallel sides is an isosceles trapezium.",
+      "explanationAr": "تذكر المحاضرة أن شبه المنحرف الذي يتساوى ضلعاه غير المتوازيين يسمى شبه منحرف متساوي الساقين.",
+      "image": null
+    },
+    {
+      "id": 62,
+      "chapter": 3,
+      "topic": "Polygons",
+      "type": "mcq",
+      "question": "What is the interior angle of a regular pentagon as stated in the lecture?",
+      "options": [
+        "108°",
+        "72°",
+        "90°",
+        "120°"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that each interior angle of a regular pentagon is 108 degrees.",
+      "explanationAr": "تذكر المحاضرة أن كل زاوية داخلية في الخماسي المنتظم تساوي 108 درجات.",
+      "image": null
+    },
+    {
+      "id": 63,
+      "chapter": 3,
+      "topic": "Polygons",
+      "type": "mcq",
+      "question": "What is the exterior angle of a regular pentagon as stated in the lecture?",
+      "options": [
+        "72°",
+        "108°",
+        "90°",
+        "180°"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture states that each exterior angle of a regular pentagon is 72 degrees.",
+      "explanationAr": "تذكر المحاضرة أن كل زاوية خارجية في الخماسي المنتظم تساوي 72 درجة.",
+      "image": null
+    },
+    {
+      "id": 64,
+      "chapter": 3,
+      "topic": "Circle",
+      "type": "tf",
+      "question": "The diameter is the largest chord of a circle.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture explicitly identifies the diameter as the biggest chord.",
+      "explanationAr": "تحدد المحاضرة القطر صراحةً بأنه أكبر وتر في الدائرة.",
+      "image": null
+    },
+    {
+      "id": 65,
+      "chapter": 3,
+      "topic": "Geometric properties",
+      "type": "matching",
+      "question": "Match each 2-D shape with the property stated in the lecture.",
+      "options": [
+        "All sides equal; all angles are 90 degrees",
+        "Opposite sides equal and parallel; all angles are 90 degrees",
+        "Opposite sides equal and parallel",
+        "A parallelogram with all sides equal"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Square",
+          "All sides equal; all angles are 90 degrees"
+        ],
+        [
+          "Rectangle",
+          "Opposite sides equal and parallel; all angles are 90 degrees"
+        ],
+        [
+          "Parallelogram",
+          "Opposite sides equal and parallel"
+        ],
+        [
+          "Rhombus",
+          "A parallelogram with all sides equal"
+        ]
+      ],
+      "explanationEn": "Each pairing follows the definitions in the Chapter 3 geometric-shapes table.",
+      "explanationAr": "يتبع كل تطابق التعريف الوارد في جدول الأشكال الهندسية في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 66,
+      "chapter": 3,
+      "topic": "Projection vocabulary",
+      "type": "matching",
+      "question": "Match each projection term with its definition.",
+      "options": [
+        "An imaginary ray between the observer’s eye and the object",
+        "An imaginary flat plane onto which the image is projected",
+        "A drawing that shows 2-D views of an object",
+        "A drawing that shows a virtual 3-D view of an object"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Line of sight (LOS)",
+          "An imaginary ray between the observer’s eye and the object"
+        ],
+        [
+          "Plane of projection",
+          "An imaginary flat plane onto which the image is projected"
+        ],
+        [
+          "Multiview drawing",
+          "A drawing that shows 2-D views of an object"
+        ],
+        [
+          "Axonometric drawing",
+          "A drawing that shows a virtual 3-D view of an object"
+        ]
+      ],
+      "explanationEn": "These definitions are taken from the projection and views slides in Chapter 3.",
+      "explanationAr": "هذه التعريفات مأخوذة من شرائح الإسقاط والمناظر في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 67,
+      "chapter": 3,
+      "topic": "Orthographic projection exercise",
+      "type": "drawing",
+      "question": "For the isometric objects shown, draw the ELEVATION, PLAN and SIDE VIEW on the corresponding grids. Keep corresponding dimensions aligned between views.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "This is a paper-based orthographic-projection task from the supplied Chapter 3 exercise slide. Project the object onto the three principal planes, align corresponding widths and heights, and use the line conventions taught in Chapters 2 and 3.",
+      "explanationAr": "هذا تمرين إسقاط متعامد على الورق من شريحة التمارين في الفصل الثالث. أسقط الجسم على المستويات الرئيسية الثلاثة، وحاذِ العروض والارتفاعات المتناظرة، واستخدم اصطلاحات الخطوط التي تناولها الفصلان الثاني والثالث.",
+      "image": "assets/source-pages/ch3-orthographic-exercise-a.png",
+      "sourcePage": 15
+    },
+    {
+      "id": 68,
+      "chapter": 3,
+      "topic": "Orthographic projection exercise",
+      "type": "drawing",
+      "question": "Complete the three orthographic views for the isometric objects shown on the exercise sheet. Label each view as elevation, plan or side view.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "Use the object’s relative orientation to identify the front, top and side. Transfer each edge to the appropriate view and preserve the relative dimensions. The exercise sheet is supplied in Chapter 3.",
+      "explanationAr": "استخدم الاتجاه النسبي للجسم لتحديد الأمام والأعلى والجانب. انقل كل حافة إلى المنظر المناسب وحافظ على الأبعاد النسبية. ورقة التمرين واردة في الفصل الثالث.",
+      "image": "assets/source-pages/ch3-orthographic-exercise-b.png",
+      "sourcePage": 16
+    },
+    {
+      "id": 69,
+      "chapter": 3,
+      "topic": "Orthographic view correspondence",
+      "type": "drawing",
+      "question": "Use the lettered isometric and orthographic diagrams to transfer the surface letters to the corresponding views.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "Compare the orientation of each labelled surface in the isometric drawing with the top, front and side views. A surface must be represented in the orthographic view that looks directly at it.",
+      "explanationAr": "قارن اتجاه كل سطح يحمل حرفًا في الرسم الأكسونومتري بالمساقط العلوي والأمامي والجانبي. يجب تمثيل السطح في المسقط المتعامد الذي ينظر إليه مباشرةً.",
+      "image": "assets/source-pages/ch3-orthographic-letter-matching.png",
+      "sourcePage": 13
+    },
+    {
+      "id": 70,
+      "chapter": 3,
+      "topic": "First-angle and third-angle symbols",
+      "type": "drawing",
+      "question": "Draw the first-angle and third-angle projection symbols in the two blank boxes, using the relative placement specified in the lecture.",
+      "options": [],
+      "correct": null,
+      "explanationEn": "The supplied symbol diagram places the circular end view to the right of the frustum for first-angle projection and to the left for third-angle projection.",
+      "explanationAr": "يضع مخطط الرموز المنظر الدائري النهائي إلى يمين مخروط الإسقاط في الزاوية الأولى، وإلى يساره في الزاوية الثالثة.",
+      "image": "assets/projection-symbol-practice.svg",
+      "sourcePage": null
+    },
+    {
+      "id": 71,
+      "chapter": 3,
+      "topic": "Polygon side counts",
+      "type": "matching",
+      "question": "Match each polygon name with its number of sides as shown in the geometric-shapes material.",
+      "options": [
+        "5 sides",
+        "6 sides",
+        "7 sides",
+        "8 sides",
+        "10 sides"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Pentagon",
+          "5 sides"
+        ],
+        [
+          "Hexagon",
+          "6 sides"
+        ],
+        [
+          "Heptagon",
+          "7 sides"
+        ],
+        [
+          "Octagon",
+          "8 sides"
+        ],
+        [
+          "Decagon",
+          "10 sides"
+        ]
+      ],
+      "explanationEn": "The polygon names and side counts follow the Chapter 3 geometric-shapes material.",
+      "explanationAr": "تتبع أسماء المضلعات وعدد أضلاعها مادة الأشكال الهندسية في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 72,
+      "chapter": 3,
+      "topic": "Polygon interior-angle sums",
+      "type": "matching",
+      "question": "Match each polygon with the sum of its interior angles listed in the lecture.",
+      "options": [
+        "540°",
+        "720°",
+        "1080°",
+        "1440°"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Pentagon",
+          "540°"
+        ],
+        [
+          "Hexagon",
+          "720°"
+        ],
+        [
+          "Octagon",
+          "1080°"
+        ],
+        [
+          "Decagon",
+          "1440°"
+        ]
+      ],
+      "explanationEn": "These interior-angle sums are listed in the Chapter 3 polygon table.",
+      "explanationAr": "مجاميع الزوايا الداخلية هذه واردة في جدول المضلعات في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 73,
+      "chapter": 3,
+      "topic": "Triangle classification",
+      "type": "matching",
+      "question": "Match each triangle classification with the definition given in the lecture.",
+      "options": [
+        "All sides are unequal",
+        "Two sides are equal",
+        "All sides are equal",
+        "All three angles are less than 90°",
+        "One angle is greater than 90°",
+        "One angle equals 90°"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Scalene triangle",
+          "All sides are unequal"
+        ],
+        [
+          "Isosceles triangle",
+          "Two sides are equal"
+        ],
+        [
+          "Equilateral triangle",
+          "All sides are equal"
+        ],
+        [
+          "Acute-angled triangle",
+          "All three angles are less than 90°"
+        ],
+        [
+          "Obtuse-angled triangle",
+          "One angle is greater than 90°"
+        ],
+        [
+          "Right-angled triangle",
+          "One angle equals 90°"
+        ]
+      ],
+      "explanationEn": "The lecture classifies triangles by side lengths and by their angles.",
+      "explanationAr": "تصنف المحاضرة المثلثات بحسب أطوال الأضلاع وبحسب الزوايا.",
+      "image": null
+    },
+    {
+      "id": 74,
+      "chapter": 3,
+      "topic": "Diagonal properties",
+      "type": "matching",
+      "question": "Match each quadrilateral with the diagonal property stated in the lecture.",
+      "options": [
+        "Diagonals are equal and bisect each other at 90°",
+        "Diagonals are equal and bisect each other",
+        "Diagonals bisect each other",
+        "Diagonals bisect each other at right angles"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Square",
+          "Diagonals are equal and bisect each other at 90°"
+        ],
+        [
+          "Rectangle",
+          "Diagonals are equal and bisect each other"
+        ],
+        [
+          "Parallelogram",
+          "Diagonals bisect each other"
+        ],
+        [
+          "Rhombus",
+          "Diagonals bisect each other at right angles"
+        ]
+      ],
+      "explanationEn": "These diagonal properties are stated in the Chapter 3 geometric-shapes table.",
+      "explanationAr": "خصائص الأقطار هذه مذكورة في جدول الأشكال الهندسية في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 75,
+      "chapter": 3,
+      "topic": "Three-dimensional shapes",
+      "type": "matching",
+      "question": "Match each 3-D shape with the description given in the Chapter 3 table.",
+      "options": [
+        "Six square faces, 12 edges and 8 vertices",
+        "Six rectangular faces, 12 edges and 8 vertices",
+        "A circular base and an apex",
+        "Two circular bases and a curved surface, with no vertex",
+        "A curved surface with no edges or vertices"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Cube",
+          "Six square faces, 12 edges and 8 vertices"
+        ],
+        [
+          "Cuboid",
+          "Six rectangular faces, 12 edges and 8 vertices"
+        ],
+        [
+          "Cone",
+          "A circular base and an apex"
+        ],
+        [
+          "Cylinder",
+          "Two circular bases and a curved surface, with no vertex"
+        ],
+        [
+          "Sphere",
+          "A curved surface with no edges or vertices"
+        ]
+      ],
+      "explanationEn": "The descriptions summarize the 3-D shape table in Chapter 3.",
+      "explanationAr": "تلخص الأوصاف جدول الأشكال ثلاثية الأبعاد في الفصل الثالث.",
+      "image": null
+    },
+    {
+      "id": 76,
+      "chapter": 3,
+      "topic": "Orthographic projection — front elevation",
+      "type": "visual-mcq",
+      "question": "The isometric object is shown in the figure. Which option represents its correct front elevation?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C"
+      ],
+      "correct": 0,
+      "explanationEn": "The correct front elevation shows the raised portion on the left, extending two-thirds of the object width, above the continuous base. Option A matches that outline; B reverses the raised portion and C incorrectly shows the full width at the maximum height.",
+      "explanationAr": "يُظهر المسقط الأمامي الصحيح الجزء المرتفع في اليسار بعرض ثلثي الجسم فوق القاعدة المستمرة. يطابق الخيار A هذا الشكل، بينما يعكس B موضع الجزء المرتفع، ويجعل C الجسم مرتفعًا بكامل عرضه على نحو غير صحيح.",
+      "image": "assets/projection-object.svg",
+      "visualOptions": [
+        "assets/projection-front-a.svg",
+        "assets/projection-front-b.svg",
+        "assets/projection-front-c.svg"
+      ]
+    },
+    {
+      "id": 77,
+      "chapter": 3,
+      "topic": "Orthographic projection — plan view",
+      "type": "visual-mcq",
+      "question": "The isometric object is shown in the figure. Which option represents its correct plan (top) view?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C"
+      ],
+      "correct": 1,
+      "explanationEn": "The correct plan view shows the full rectangular footprint and the L-shaped boundary of the raised block on the rear half: its boundary spans two-thirds of the width, and the side boundary marks the block edge. Option B shows these boundaries.",
+      "explanationAr": "يُظهر المسقط العلوي الصحيح المساحة المستطيلة الكاملة وحدود الجزء المرتفع على شكل حرف L في النصف الخلفي؛ يمتد الحد عبر ثلثي العرض، ويحدد الحد الجانبي طرف الكتلة. يوضح الخيار B هذين الحدّين.",
+      "image": "assets/projection-object.svg",
+      "visualOptions": [
+        "assets/projection-top-a.svg",
+        "assets/projection-top-b.svg",
+        "assets/projection-top-c.svg"
+      ]
+    },
+    {
+      "id": 78,
+      "chapter": 3,
+      "topic": "Orthographic projection — right-side view",
+      "type": "visual-mcq",
+      "question": "The isometric object is shown in the figure. Which option represents its correct right-side view?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C"
+      ],
+      "correct": 2,
+      "explanationEn": "The correct right-side view shows the base across the full depth and the raised portion only over the rear half. Option C places the tall portion at the rear; A mirrors it and B incorrectly makes the whole depth tall.",
+      "explanationAr": "يُظهر المسقط الجانبي الأيمن الصحيح القاعدة عبر العمق كاملًا، والجزء المرتفع فوق النصف الخلفي فقط. يضع الخيار C الجزء المرتفع في الخلف، بينما يعكسه A ويجعل B العمق كله مرتفعًا على نحو غير صحيح.",
+      "image": "assets/projection-object.svg",
+      "visualOptions": [
+        "assets/projection-side-a.svg",
+        "assets/projection-side-b.svg",
+        "assets/projection-side-c.svg"
+      ]
+    }
+  ],
+  "4": [
+    {
+      "id": 79,
+      "chapter": 4,
+      "topic": "Definition",
+      "type": "mcq",
+      "question": "Which description best matches the definition of a Platonic solid in the lecture?",
+      "options": [
+        "A regular convex polyhedron with identical congruent regular-polygon faces and the same number of faces meeting at each vertex",
+        "A flat shape with one curved edge",
+        "Any solid with faces of different shapes and sizes",
+        "A drawing made without instruments"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture defines a Platonic solid as a regular convex polyhedron with congruent regular polygon faces and the same number of faces meeting at each vertex.",
+      "explanationAr": "تعرف المحاضرة المجسم الأفلاطوني بأنه متعدد سطوح محدب منتظم ذو أوجه مضلعة منتظمة متطابقة ويلتقي العدد نفسه من الأوجه عند كل رأس.",
+      "image": null
+    },
+    {
+      "id": 80,
+      "chapter": 4,
+      "topic": "General properties",
+      "type": "mcq",
+      "question": "How many types of Platonic solids are listed in the lecture?",
+      "options": [
+        "5",
+        "3",
+        "4",
+        "6"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture lists five Platonic solids.",
+      "explanationAr": "تسرد المحاضرة خمسة مجسمات أفلاطونية.",
+      "image": null
+    },
+    {
+      "id": 81,
+      "chapter": 4,
+      "topic": "General properties",
+      "type": "mcq",
+      "question": "According to the lecture, Platonic solids are:",
+      "options": [
+        "Three-dimensional, convex and regular",
+        "Two-dimensional and flat",
+        "Always concave",
+        "Made only of curved surfaces"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide describes Platonic solids as three-dimensional, convex and regular.",
+      "explanationAr": "تصف السلايد المجسمات الأفلاطونية بأنها ثلاثية الأبعاد ومحدبة ومنتظمة.",
+      "image": null
+    },
+    {
+      "id": 82,
+      "chapter": 4,
+      "topic": "General properties",
+      "type": "mcq",
+      "question": "What does the lecture say about faces of a Platonic solid?",
+      "options": [
+        "They do not intersect except at their edges",
+        "They overlap throughout their interiors",
+        "They must all be circles",
+        "They have different shapes"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says faces of Platonic solids do not intersect except at their edges.",
+      "explanationAr": "تذكر المحاضرة أن أوجه المجسمات الأفلاطونية لا تتقاطع إلا عند أحرفها.",
+      "image": null
+    },
+    {
+      "id": 83,
+      "chapter": 4,
+      "topic": "Tetrahedron",
+      "type": "mcq",
+      "question": "Which property of a tetrahedron is explicitly listed?",
+      "options": [
+        "It has no parallel faces",
+        "It has 20 vertices",
+        "It has 12 square faces",
+        "It has 30 edges"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says a tetrahedron has no parallel faces.",
+      "explanationAr": "تذكر المحاضرة أن رباعي الوجوه لا يملك أوجهًا متوازية.",
+      "image": null
+    },
+    {
+      "id": 84,
+      "chapter": 4,
+      "topic": "Tetrahedron",
+      "type": "mcq",
+      "question": "How many planes of symmetry does the lecture assign to a tetrahedron?",
+      "options": [
+        "6",
+        "4",
+        "8",
+        "12"
+      ],
+      "correct": 0,
+      "explanationEn": "The tetrahedron slide explicitly lists 6 planes of symmetry.",
+      "explanationAr": "تذكر سلايد رباعي الوجوه صراحة أن له 6 مستويات تماثل.",
+      "image": null
+    },
+    {
+      "id": 85,
+      "chapter": 4,
+      "topic": "Cube",
+      "type": "mcq",
+      "question": "What is the angle between two adjacent faces of a cube, as stated in the chapter?",
+      "options": [
+        "90°",
+        "45°",
+        "60°",
+        "180°"
+      ],
+      "correct": 0,
+      "explanationEn": "The cube slide says the angle between any two faces is 90 degrees.",
+      "explanationAr": "تذكر سلايد المكعب أن الزاوية بين أي وجهين تساوي 90 درجة.",
+      "image": null
+    },
+    {
+      "id": 86,
+      "chapter": 4,
+      "topic": "Dodecahedron",
+      "type": "mcq",
+      "question": "How many diagonals are listed for a dodecahedron in Chapter 4?",
+      "options": [
+        "160",
+        "30",
+        "20",
+        "12"
+      ],
+      "correct": 0,
+      "explanationEn": "The supplied Chapter 4 slide explicitly states that a dodecahedron has 160 diagonals.",
+      "explanationAr": "تذكر سلايد الفصل الرابع صراحة أن للاثني عشري الوجوه 160 قطرًا.",
+      "image": null
+    },
+    {
+      "id": 87,
+      "chapter": 4,
+      "topic": "Icosahedron",
+      "type": "mcq",
+      "question": "Which distinction does the lecture give to the icosahedron?",
+      "options": [
+        "It has the greatest number of faces of any Platonic solid",
+        "It has the fewest faces",
+        "It has 12 pentagonal faces",
+        "It has no vertices"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture says the icosahedron has the greatest number of faces among Platonic solids.",
+      "explanationAr": "تذكر المحاضرة أن العشريني الوجوه يملك أكبر عدد من الأوجه بين المجسمات الأفلاطونية.",
+      "image": null
+    },
+    {
+      "id": 88,
+      "chapter": 4,
+      "topic": "Existence of five solids",
+      "type": "mcq",
+      "question": "At least how many faces meet at each vertex of a Platonic solid, according to the chapter?",
+      "options": [
+        "At least 3",
+        "At least 1",
+        "Exactly 2",
+        "At least 6"
+      ],
+      "correct": 0,
+      "explanationEn": "The proof slide says at least three faces meet at each vertex for each of the five solids.",
+      "explanationAr": "تذكر سلايد البرهان أن ثلاثة أوجه على الأقل تلتقي عند كل رأس في كل واحد من المجسمات الخمسة.",
+      "image": null
+    },
+    {
+      "id": 89,
+      "chapter": 4,
+      "topic": "Existence of five solids",
+      "type": "mcq",
+      "question": "What condition do the internal angles meeting at a vertex satisfy in the lecture’s explanation?",
+      "options": [
+        "Their sum is less than 360°",
+        "Their sum is greater than 360°",
+        "Their sum is always exactly 360°",
+        "Their sum is unrelated to 360°"
+      ],
+      "correct": 0,
+      "explanationEn": "The slide says the internal angles that meet at a vertex are less than 360 degrees.",
+      "explanationAr": "تذكر السلايد أن مجموع الزوايا الداخلية التي تلتقي عند الرأس أقل من 360 درجة.",
+      "image": null
+    },
+    {
+      "id": 90,
+      "chapter": 4,
+      "topic": "Euler formula",
+      "type": "mcq",
+      "question": "The worked example in Chapter 4 checks a dodecahedron with F = 12, V = 20 and E = 30. What is F + V − E?",
+      "options": [
+        "2",
+        "0",
+        "1",
+        "12"
+      ],
+      "correct": 0,
+      "explanationEn": "The lecture example calculates 12 + 20 − 30 = 2.",
+      "explanationAr": "يحسب مثال المحاضرة 12 + 20 − 30 = 2.",
+      "image": null
+    },
+    {
+      "id": 91,
+      "chapter": 4,
+      "topic": "Platonic-solid structure",
+      "type": "matching",
+      "question": "Match each Platonic solid with its face shape and the number of faces, edges and vertices listed in the lecture.",
+      "options": [
+        "4 triangular faces, 6 edges and 4 vertices",
+        "6 square faces, 12 edges and 8 vertices",
+        "8 triangular faces, 12 edges and 6 vertices",
+        "12 pentagonal faces, 30 edges and 20 vertices",
+        "20 triangular faces, 30 edges and 12 vertices"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Tetrahedron",
+          "4 triangular faces, 6 edges and 4 vertices"
+        ],
+        [
+          "Cube",
+          "6 square faces, 12 edges and 8 vertices"
+        ],
+        [
+          "Octahedron",
+          "8 triangular faces, 12 edges and 6 vertices"
+        ],
+        [
+          "Dodecahedron",
+          "12 pentagonal faces, 30 edges and 20 vertices"
+        ],
+        [
+          "Icosahedron",
+          "20 triangular faces, 30 edges and 12 vertices"
+        ]
+      ],
+      "explanationEn": "The face shapes and counts are taken from the Chapter 4 descriptions of the five Platonic solids.",
+      "explanationAr": "أشكال الأوجه وأعدادها مأخوذة من أوصاف المجسمات الأفلاطونية الخمسة في الفصل الرابع.",
+      "image": null
+    },
+    {
+      "id": 92,
+      "chapter": 4,
+      "topic": "Platonic-solid associations",
+      "type": "matching",
+      "question": "Match each solid with the element associated with it in the chapter.",
+      "options": [
+        "Fire",
+        "Earth",
+        "Air",
+        "The universe",
+        "Water"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Tetrahedron",
+          "Fire"
+        ],
+        [
+          "Cube",
+          "Earth"
+        ],
+        [
+          "Octahedron",
+          "Air"
+        ],
+        [
+          "Dodecahedron",
+          "The universe"
+        ],
+        [
+          "Icosahedron",
+          "Water"
+        ]
+      ],
+      "explanationEn": "These associations are listed in the introductory slides of Chapter 4.",
+      "explanationAr": "هذه الارتباطات واردة في الشرائح التمهيدية للفصل الرابع.",
+      "image": null
+    },
+    {
+      "id": 93,
+      "chapter": 4,
+      "topic": "Vertex angle totals",
+      "type": "matching",
+      "question": "Match each solid with the total angle at a vertex shown in the Chapter 4 proof table.",
+      "options": [
+        "180°",
+        "270°",
+        "240°",
+        "324°",
+        "300°"
+      ],
+      "correct": null,
+      "pairs": [
+        [
+          "Tetrahedron",
+          "180°"
+        ],
+        [
+          "Cube",
+          "270°"
+        ],
+        [
+          "Octahedron",
+          "240°"
+        ],
+        [
+          "Dodecahedron",
+          "324°"
+        ],
+        [
+          "Icosahedron",
+          "300°"
+        ]
+      ],
+      "explanationEn": "The Chapter 4 proof table lists the sums of face angles meeting at a vertex for the five solids; each total is less than 360°.",
+      "explanationAr": "يعرض جدول البرهان في الفصل الرابع مجموع زوايا الأوجه الملتقية عند رأس في كل مجسم؛ وكل مجموع أقل من 360°.",
+      "image": null
+    }
+  ]
 };
 
-// أوقات الاختبار لكل فصل (بالثواني)
-const chapterTimes = {
-    1: 2400,
-    2: 3000,
-    3: 2100,
-    4: 2100,
-    5: 1800,
-    6: 1800,
-    7: 1800,
-    8: 1800,
-    9: 1800
+for (const [chapter, questions] of Object.entries(questionsDB)) {
+  for (const q of questions) {
+    if (q.chapter !== Number(chapter) || !q.topic || !q.question || !q.explanationEn || !q.explanationAr) throw new Error('Invalid question record: ' + q.question);
+    if (['mcq','tf','blank','visual-mcq'].includes(q.type) && (!Array.isArray(q.options) || !Number.isInteger(q.correct) || q.options[q.correct] === undefined)) throw new Error('Invalid answer key: ' + q.question);
+    if (q.type === 'matching' && (!Array.isArray(q.pairs) || q.pairs.length < 3 || new Set(q.pairs.map(p => p[1])).size !== q.pairs.length)) throw new Error('Invalid matching question: ' + q.question);
+    if (q.type === 'drawing' && (!q.image || q.options.length !== 0)) throw new Error('Invalid drawing task: ' + q.question);
+    if (q.type === 'visual-mcq' && (!q.image || !Array.isArray(q.visualOptions) || q.visualOptions.length !== 3)) throw new Error('Invalid visual question: ' + q.question);
+  }
+}
+
+const chapterMeta = {
+  1: { title: 'Introduction to Engineering Drawing & Tools', ar: 'مقدمة في الرسم الهندسي وأدواته', sourceFile: 'CHAPTER 1 Introduction to Engineering Drawing & Tools.pdf', icon: '✏️', time: 60, topics: 'Drawing language · standards · sheets · scales · instruments' },
+  2: { title: 'Line Types', ar: 'أنواع الخطوط', sourceFile: 'ENG0023 CHAPTER 2.pdf', icon: '📐', time: 60, topics: 'Visible · hidden · section · dimension · break · phantom lines' },
+  3: { title: '2-D Geometric Shapes & Projection', ar: 'الأشكال الهندسية ثنائية الأبعاد والإسقاط', sourceFile: 'CHAPTER 3 2-D Geometric Shapes.pdf', icon: '📏', time: 75, topics: '2D/3D · projection · views · polygons · geometric properties' },
+  4: { title: 'Platonic Solids', ar: 'المجسمات الأفلاطونية', sourceFile: 'CHAPTER 4 PLATNOIC SOLIDS.pdf', icon: '🧊', time: 60, topics: 'Five solids · faces · edges · vertices · Euler relation' }
 };
 
-// المتغيرات العامة
-let currentChapter = 1;
+let currentChapter = null;
 let currentQuestions = [];
 let userAnswers = [];
 let currentIndex = 0;
@@ -489,225 +2005,381 @@ let timerInterval = null;
 let timeLeft = 0;
 let quizActive = false;
 let quizSubmitted = false;
+let shuffledOptions = [];
 
-// ============================================
-// دوال الاختبار
-// ============================================
-
-function startChapter(chapter) {
-    currentChapter = chapter;
-    currentQuestions = questionsDB[chapter];
-    userAnswers = new Array(currentQuestions.length).fill(null);
-    currentIndex = 0;
-    quizActive = true;
-    quizSubmitted = false;
-    timeLeft = chapterTimes[chapter];
-    
-    document.getElementById('homeScreen').style.display = 'none';
-    document.getElementById('quizScreen').style.display = 'block';
-    
-    updateDisplay();
-    startTimer();
-}
-
-function backToHome() {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-    document.getElementById('homeScreen').style.display = 'block';
-    document.getElementById('quizScreen').style.display = 'none';
-}
-
-function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        if (timeLeft <= 0) {
-            timeLeft = 0;
-            submitQuiz();
-        } else {
-            timeLeft--;
-            updateTimer();
-        }
-    }, 1000);
-}
-
-function updateTimer() {
-    const m = Math.floor(timeLeft / 60);
-    const s = timeLeft % 60;
-    document.getElementById('timer').textContent = 
-        `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
-
-function updateDisplay() {
-    document.getElementById('questionCounter').textContent = 
-        `${currentIndex + 1}/${currentQuestions.length}`;
-    
-    const q = currentQuestions[currentIndex];
-    let html = `
-        <div class="question-number">سؤال ${currentIndex + 1}</div>
-        <div class="question-text">${q.question}</div>
-        <div class="options">
-    `;
-    
-    q.options.forEach((opt, i) => {
-        const selected = userAnswers[currentIndex] === i ? 'selected' : '';
-        const letter = String.fromCharCode(65 + i);
-        html += `<div class="option ${selected}" onclick="selectOption(${i})">${letter}. ${opt}</div>`;
-    });
-    
-    html += '</div>';
-    document.getElementById('questionBox').innerHTML = html;
-    
-    document.getElementById('prevBtn').disabled = currentIndex === 0;
-    document.getElementById('nextBtn').disabled = currentIndex === currentQuestions.length - 1;
-}
-
-function selectOption(index) {
-    if (!quizActive || quizSubmitted) return;
-    userAnswers[currentIndex] = index;
-    
-    document.querySelectorAll('.option').forEach((opt, i) => {
-        opt.classList.toggle('selected', i === index);
-    });
-}
-
-function prevQuestion() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateDisplay();
-    }
-}
-
-function nextQuestion() {
-    if (currentIndex < currentQuestions.length - 1) {
-        currentIndex++;
-        updateDisplay();
-    }
-}
-
-function submitQuiz() {
-    if (!quizActive || quizSubmitted) return;
-    
-    clearInterval(timerInterval);
-    quizActive = false;
-    quizSubmitted = true;
-    
-    let correct = 0;
-    let wrong = 0;
-    const results = [];
-    
-    currentQuestions.forEach((q, i) => {
-        const isCorrect = userAnswers[i] === q.correct;
-        if (isCorrect) {
-            correct++;
-        } else {
-            wrong++;
-        }
-        
-        results.push({
-            question: q.question,
-            userAnswer: userAnswers[i] !== null ? q.options[userAnswers[i]] : 'لم يتم الإجابة',
-            correctAnswer: q.options[q.correct],
-            isCorrect
-        });
-    });
-    
-    const score = Math.round((correct / currentQuestions.length) * 100);
-    showResults(results, correct, wrong, score);
-}
-
-function showResults(results, correct, wrong, score) {
-    let correctHtml = '';
-    let wrongHtml = '';
-    
-    results.forEach((r, i) => {
-        const item = `
-            <div class="answer-item ${r.isCorrect ? 'correct' : 'wrong'}">
-                <div class="answer-question">${i+1}. ${r.question}</div>
-                <div class="answer-details">
-                    ${!r.isCorrect ? `<div style="color: #dc3545; margin-bottom: 5px;">❌ إجابتك: ${r.userAnswer}</div>` : ''}
-                    <div style="color: #28a745;">✓ الإجابة الصحيحة: ${r.correctAnswer}</div>
-                </div>
-            </div>
-        `;
-        
-        if (r.isCorrect) {
-            correctHtml += item;
-        } else {
-            wrongHtml += item;
-        }
-    });
-    
-    const resultDiv = document.createElement('div');
-    resultDiv.className = 'result-screen';
-    resultDiv.id = 'resultScreen';
-    resultDiv.innerHTML = `
-        <div class="result-box">
-            <div class="result-header">
-                <h2>نتيجة الاختبار</h2>
-                <div class="score-circle">
-                    <div class="score-number">${score}%</div>
-                    <div class="score-label">الدرجة</div>
-                </div>
-                <div class="stats-row">
-                    <span class="correct-stat">✓ صحيح: ${correct}</span>
-                    <span class="wrong-stat">✗ خطأ: ${wrong}</span>
-                </div>
-            </div>
-            
-            <div class="result-tabs">
-                <button class="tab-btn active" onclick="showResultTab('correct')">✅ الإجابات الصحيحة (${correct})</button>
-                <button class="tab-btn" onclick="showResultTab('wrong')">❌ الإجابات الخاطئة (${wrong})</button>
-            </div>
-            
-            <div id="correctTab" class="answers-list">
-                ${correctHtml || '<p style="text-align:center; padding:20px;">لا توجد إجابات صحيحة</p>'}
-            </div>
-            
-            <div id="wrongTab" class="answers-list" style="display:none;">
-                ${wrongHtml || '<p style="text-align:center; padding:20px;">لا توجد أخطاء - ممتاز!</p>'}
-            </div>
-            
-            <button class="close-results" onclick="closeResults()">العودة للصفحة الرئيسية</button>
-        </div>
-    `;
-    
-    document.body.appendChild(resultDiv);
-}
-
-function showResultTab(tab) {
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(t => t.classList.remove('active'));
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
-    
-    document.getElementById('correctTab').style.display = tab === 'correct' ? 'block' : 'none';
-    document.getElementById('wrongTab').style.display = tab === 'wrong' ? 'block' : 'none';
-}
-
-function closeResults() {
-    const resultScreen = document.getElementById('resultScreen');
-    if (resultScreen) resultScreen.remove();
-    backToHome();
-}
-
-// ============================================
-// تهيئة الصفحة عند التحميل مع التحقق من الجلسة
-// ============================================
-window.onload = function() {
-    const isAccessGranted = sessionStorage.getItem('quizAccessGranted');
-    
-    if (isAccessGranted === 'true') {
-        document.getElementById('pledgeScreen').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        initChapters();
-    } else {
-        document.getElementById('pledgeScreen').style.display = 'flex';
-        document.getElementById('mainContent').style.display = 'none';
-        
-        const mainContent = document.getElementById('mainContent');
-        if (mainContent) mainContent.style.display = 'none';
-    }
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const typeNames = {
+  mcq: 'Multiple Choice',
+  tf: 'True / False',
+  blank: 'Fill in the Blank',
+  matching: 'Matching',
+  drawing: 'Drawing Exercise',
+  'visual-mcq': 'Orthographic Projection — Visual Question'
 };
+
+function goToHomePage() {
+  $('pledgeScreen').hidden = true;
+  $('mainContent').hidden = false;
+  initChapters();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function initChapters() {
+  const grid = $('chaptersGrid');
+  grid.innerHTML = Object.entries(chapterMeta).map(([num, meta]) => {
+    const count = questionsDB[num].length;
+    const autoCount = questionsDB[num].filter(q => q.type !== 'drawing').length;
+    const drawingCount = count - autoCount;
+    return `<button class="chapter-card" type="button" onclick="startChapter(${num})">
+      <span class="chapter-top"><span class="chapter-icon">${meta.icon}</span><span class="chapter-count">${count} سؤالًا وتمرينًا</span></span>
+      <span class="chapter-title-ar">الفصل ${num}</span><span class="chapter-title">${esc(meta.title)}</span>
+      <span class="chapter-ar">${esc(meta.ar)}</span><span class="chapter-topics">${esc(meta.topics)}</span>
+      <span class="chapter-footer"><span>مدة الاختبار تختارها قبل البدء</span><span class="start-label">ابدأ المراجعة <b>←</b></span></span>
+    </button>`;
+  }).join('');
+  $('totalQuestions').textContent = Object.values(questionsDB).reduce((n, qs) => n + qs.length, 0);
+}
+function shuffleArray(arr) {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+let pendingChapter = null;
+let timerEnabled = true;
+function startChapter(chapter) {
+  if (quizActive && !confirm('هل تريد إنهاء الاختبار الحالي والبدء باختبار جديد؟')) return;
+  pendingChapter = Number(chapter);
+  const dialog = $('durationDialog');
+  if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+  else confirmStartQuiz();
+}
+function cancelStartQuiz() {
+  const dialog = $('durationDialog');
+  if (dialog && dialog.open) dialog.close();
+  pendingChapter = null;
+}
+function confirmStartQuiz() {
+  if (pendingChapter === null) return;
+  const chapter = pendingChapter;
+  const duration = $('durationChoice') ? $('durationChoice').value : 'chapter';
+  pendingChapter = null;
+  const dialog = $('durationDialog');
+  if (dialog && dialog.open) dialog.close();
+  beginChapter(chapter, duration);
+}
+function beginChapter(chapter, duration) {
+  stopTimer();
+  currentChapter = Number(chapter);
+  currentQuestions = shuffleArray([...questionsDB[currentChapter]]);
+  userAnswers = Array(currentQuestions.length).fill(null);
+  shuffledOptions = currentQuestions.map(q => {
+    if (q.type === 'drawing' || q.type === 'visual-mcq') {
+      const originalIndices = q.options.map((_, i) => i);
+      return { options: [...q.options], correct: q.correct, originalIndices };
+    }
+    const originalIndices = shuffleArray(q.options.map((_, i) => i));
+    return {
+      options: originalIndices.map(i => q.options[i]),
+      correct: Number.isInteger(q.correct) ? originalIndices.indexOf(q.correct) : null,
+      originalIndices
+    };
+  });
+  currentIndex = 0;
+  quizActive = true;
+  quizSubmitted = false;
+  timerEnabled = duration !== 'none';
+  timeLeft = !timerEnabled ? 0 : duration === 'chapter' ? chapterMeta[currentChapter].time * 60 : Math.max(1, Number(duration) || chapterMeta[currentChapter].time) * 60;
+  $('homeScreen').hidden = true;
+  $('quizScreen').hidden = false;
+  $('resultsScreen').hidden = true;
+  if ($('timerLabel')) $('timerLabel').textContent = timerEnabled ? 'الوقت المتبقي' : 'بدون مؤقت';
+  if ($('timerCaption')) $('timerCaption').textContent = timerEnabled ? 'TIME REMAINING' : 'UNTIMED';
+  renderQuestion();
+  updateTimer();
+  if (timerEnabled) {
+    timerInterval = setInterval(() => {
+      if (!quizActive || quizSubmitted) return;
+      timeLeft -= 1;
+      updateTimer();
+      if (timeLeft <= 0) submitQuiz(true);
+    }, 1000);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+}
+function updateTimer() {
+  if (!timerEnabled) {
+    $('timer').textContent = '∞';
+    $('timer').classList.remove('timer-warning');
+    return;
+  }
+  const m = Math.floor(Math.max(0, timeLeft) / 60);
+  const s = Math.max(0, timeLeft) % 60;
+  $('timer').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  $('timer').classList.toggle('timer-warning', timeLeft <= 60);
+}
+function isAnsweredAt(index) {
+  const q = currentQuestions[index];
+  const answer = userAnswers[index];
+  if (!q || answer === null || answer === undefined) return false;
+  if (q.type === 'matching') return q.pairs.every((_, row) => answer && Number.isInteger(answer[row]));
+  if (q.type === 'drawing') return answer === 'completed';
+  return Number.isInteger(answer);
+}
+function answeredCount() {
+  return currentQuestions.reduce((count, _, index) => count + (isAnsweredAt(index) ? 1 : 0), 0);
+}
+function updateProgress() {
+  const answered = answeredCount();
+  $('answeredCounter').textContent = `${answered} / ${currentQuestions.length}`;
+  $('progressFill').style.width = `${currentQuestions.length ? answered / currentQuestions.length * 100 : 0}%`;
+  $('nextBtn').disabled = false;
+  $('nextBtn').textContent = currentIndex === currentQuestions.length - 1 ? 'عرض النتيجة' : 'التالي ←';
+  renderQuestionPalette();
+}
+function renderQuestionPalette() {
+  const palette = $('questionPalette');
+  if (!palette || !currentQuestions.length) return;
+  palette.innerHTML = currentQuestions.map((q, i) => {
+    const done = isAnsweredAt(i);
+    const current = i === currentIndex;
+    const state = done ? 'answered' : 'unanswered';
+    const label = done ? 'تمت الإجابة' : 'لم تتم الإجابة';
+    return `<button type="button" class="palette-number ${state} ${current ? 'current' : ''}" onclick="jumpToQuestion(${i})" aria-label="السؤال ${i+1}، ${label}" aria-current="${current ? 'step' : 'false'}" title="${label}">${i+1}</button>`;
+  }).join('');
+  if ($('paletteAnsweredCount')) $('paletteAnsweredCount').textContent = answeredCount();
+  if ($('paletteUnansweredCount')) $('paletteUnansweredCount').textContent = currentQuestions.length - answeredCount();
+}
+function jumpToQuestion(index) {
+  if (!quizActive || quizSubmitted || index < 0 || index >= currentQuestions.length) return;
+  currentIndex = index;
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function renderQuestion() {
+  if (!currentQuestions.length) return;
+  const q = currentQuestions[currentIndex];
+  const optSet = shuffledOptions[currentIndex];
+  $('questionCounter').textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
+  $('chapterHeading').textContent = `Chapter ${currentChapter} · ${chapterMeta[currentChapter].title}`;
+  $('questionMeta').innerHTML = `<span class="eyebrow">CHAPTER ${currentChapter}</span><span class="topic-chip">${esc(q.topic)}</span><span class="type-chip">${esc(typeNames[q.type] || 'Question')}</span>`;
+  $('questionText').textContent = q.question;
+  $('questionImageWrap').hidden = !q.image;
+  $('questionImage').src = q.image || '';
+  $('questionImage').alt = q.image ? `Course diagram for ${q.topic}` : '';
+  $('questionImageCaption').textContent = q.image ? (q.type === 'visual-mcq' ? 'Compare the candidate views with the isometric object. / قارن المساقط المقترحة بالمجسم المنظوري.' : 'Study the drawing carefully before answering. / تأمل الرسم قبل الإجابة.') : '';
+  const answer = userAnswers[currentIndex];
+  if (q.type === 'visual-mcq') {
+    $('optionsList').innerHTML = renderVisualOptions(q, answer);
+  } else if (q.type === 'matching') {
+    $('optionsList').innerHTML = renderMatching(q, optSet, answer);
+  } else if (q.type === 'drawing') {
+    $('optionsList').innerHTML = `<div class="drawing-task-note" dir="rtl"><strong>تمرين عملي</strong><p>نفّذ الرسم على الورق، ثم اضغط على زر «أتممت الرسم» لتسجيل إنجاز التمرين. لا تُحتسب هذه التمارين آليًا ضمن الدرجة.</p></div><button type="button" class="button ${answer === 'completed' ? 'button-success' : 'button-primary'} drawing-complete" onclick="markDrawingComplete()">${answer === 'completed' ? '✓ تم تسجيل إتمام الرسم' : 'أتممت الرسم على الورق'}</button>`;
+  } else if (q.type === 'blank') {
+    $('optionsList').innerHTML = `<label class="blank-answer-label" for="blankAnswer">اختر الإجابة:</label><select id="blankAnswer" class="blank-answer-select" onchange="selectOption(this.value === '' ? null : Number(this.value))"><option value="">Select an answer</option>${optSet.options.map((opt, i) => `<option value="${i}" ${answer === i ? 'selected' : ''}>${String.fromCharCode(65+i)}. ${esc(opt)}</option>`).join('')}</select>`;
+  } else {
+    $('optionsList').innerHTML = optSet.options.map((opt, i) => {
+      const selected = answer === i;
+      return `<button type="button" class="option-card ${selected ? 'selected' : ''}" aria-pressed="${selected}" onclick="selectOption(${i})"><span class="option-letter">${String.fromCharCode(65+i)}</span><span class="option-text">${esc(opt)}</span><span class="option-check">${selected ? '✓' : ''}</span></button>`;
+    }).join('');
+  }
+  $('prevBtn').disabled = currentIndex === 0;
+  updateProgress();
+}
+function renderVisualOptions(q, answer) {
+  return `<div class="visual-choice-grid">${q.visualOptions.map((src, i) => `
+    <button type="button" class="visual-choice-card ${answer === i ? 'selected' : ''}" aria-pressed="${answer === i}" onclick="selectOption(${i})">
+      <span class="visual-choice-label">Option ${String.fromCharCode(65+i)}</span>
+      <img src="${esc(src)}" alt="Orthographic candidate view ${String.fromCharCode(65+i)}" loading="eager">
+      <span class="visual-choice-status">${answer === i ? '✓ تم الاختيار' : 'اختر هذا الرسم'}</span>
+    </button>`).join('')}</div>`;
+}
+function renderMatching(q, optSet, answer) {
+  const chosen = answer && typeof answer === 'object' ? answer : {};
+  return `<div class="matching-instructions" dir="rtl">طابق كل مصطلح في العمود الأول مع التعريف الصحيح في العمود الثاني. جميع المصطلحات والتعريفات باللغة الإنجليزية.</div>
+    <div class="matching-definition-bank"><h3>Column B — Definitions</h3><ol>${optSet.options.map((definition, i) => `<li><b>${String.fromCharCode(65+i)}.</b> ${esc(definition)}</li>`).join('')}</ol></div>
+    <div class="matching-rows"><h3>Column A — Terms</h3>${q.pairs.map((pair, row) => `<label class="matching-row"><span><b>${row+1}.</b> ${esc(pair[0])}</span><select aria-label="Match ${esc(pair[0])}" onchange="selectMatchingOption(${row}, this.value)"><option value="">Select a definition</option>${optSet.options.map((definition, i) => `<option value="${i}" ${chosen[row] === i ? 'selected' : ''}>${String.fromCharCode(65+i)} — ${esc(definition)}</option>`).join('')}</select></label>`).join('')}</div>`;
+}
+function selectOption(index) {
+  if (!quizActive || quizSubmitted) return;
+  userAnswers[currentIndex] = Number.isInteger(index) ? index : null;
+  renderQuestion();
+}
+function selectMatchingOption(row, rawValue) {
+  if (!quizActive || quizSubmitted) return;
+  if (!userAnswers[currentIndex] || typeof userAnswers[currentIndex] !== 'object') userAnswers[currentIndex] = {};
+  if (rawValue === '') delete userAnswers[currentIndex][row];
+  else userAnswers[currentIndex][row] = Number(rawValue);
+  updateProgress();
+}
+function markDrawingComplete() {
+  if (!quizActive || quizSubmitted) return;
+  userAnswers[currentIndex] = 'completed';
+  renderQuestion();
+}
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+function nextQuestion() {
+  if (currentIndex < currentQuestions.length - 1) {
+    currentIndex++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  const firstMissing = currentQuestions.findIndex((_, i) => !isAnsweredAt(i));
+  if (firstMissing >= 0) {
+    currentIndex = firstMissing;
+    renderQuestion();
+    showToast('توجد أسئلة غير مجابة. يمكنك الانتقال إليها من شريط أرقام الأسئلة.');
+    return;
+  }
+  submitQuiz(false);
+}
+function endQuizEarly() {
+  if (confirm('هل تريد إنهاء الاختبار الآن؟ ستظهر الأسئلة غير المجاب عنها في المراجعة، ولن تُحتسب تمارين الرسم ضمن الدرجة الآلية.')) submitQuiz(true);
+}
+function isCorrectAt(index) {
+  const q = currentQuestions[index];
+  const answer = userAnswers[index];
+  const optSet = shuffledOptions[index];
+  if (!q || q.type === 'drawing' || !isAnsweredAt(index)) return false;
+  if (q.type !== 'matching') return answer === optSet.correct;
+  return q.pairs.every((pair, row) => {
+    const originalOptionIndex = q.options.indexOf(pair[1]);
+    const expectedShuffledIndex = optSet.originalIndices.indexOf(originalOptionIndex);
+    return answer[row] === expectedShuffledIndex;
+  });
+}
+function formatUserAnswer(q, answer, optSet) {
+  if (q.type === 'drawing') return answer === 'completed' ? 'Completed on paper / أُنجز على الورق' : 'Not marked as completed / لم يُسجل إتمام الرسم';
+  if (answer === null || answer === undefined) return 'Not answered / لم تتم الإجابة';
+  if (q.type === 'matching') return q.pairs.map((pair, row) => `${pair[0]} → ${Number.isInteger(answer[row]) ? (optSet.options[answer[row]] || '—') : '—'}`).join(' | ');
+  return optSet.options[answer] ?? 'Not answered / لم تتم الإجابة';
+}
+function formatCorrectAnswer(q, optSet) {
+  if (q.type === 'drawing') return 'Paper-based drawing task; use the guidance below. / تمرين رسم على الورق؛ راجع الإرشادات أدناه.';
+  if (q.type === 'matching') return q.pairs.map(pair => `${pair[0]} → ${pair[1]}`).join(' | ');
+  return optSet.options[optSet.correct];
+}
+function buildExplanation(q, optSet) {
+  const drawingNoteEn = q.type === 'drawing' ? '<p><strong>Assessment note:</strong> Complete the drawing on paper. Compare your result with the source exercise and the conventions stated in the chapter; it is not graded automatically.</p>' : '';
+  const drawingNoteAr = q.type === 'drawing' ? '<p><strong>ملاحظة التصحيح:</strong> نفّذ الرسم على الورق، ثم قارنه بتمرين المصدر واصطلاحات الفصل. لا يُصحّح هذا التمرين آليًا.</p>' : '';
+  const matchEn = q.type === 'matching' ? `<div class="option-analysis"><h5>Correct matches</h5><ul>${q.pairs.map(pair => `<li><strong>${esc(pair[0])}</strong> — ${esc(pair[1])}</li>`).join('')}</ul></div>` : '';
+  const matchAr = q.type === 'matching' ? `<div class="option-analysis" dir="rtl"><h5>المطابقات الصحيحة</h5><ul>${q.pairs.map(pair => `<li><strong>${esc(pair[0])}</strong> — ${esc(pair[1])}</li>`).join('')}</ul></div>` : '';
+  return `<div class="explanation en"><h4>Detailed explanation — English</h4><p>${esc(q.explanationEn)}</p>${q.type === 'drawing' ? drawingNoteEn : matchEn}</div>
+    <div class="explanation ar" dir="rtl" lang="ar"><h4>الشرح المفصل — العربية</h4><p>${esc(q.explanationAr)}</p>${q.type === 'drawing' ? drawingNoteAr : matchAr}</div>`;
+}
+function submitQuiz(automatic = false) {
+  if (!quizActive || quizSubmitted) return;
+  if (!automatic) {
+    const firstMissing = currentQuestions.findIndex((_, i) => !isAnsweredAt(i));
+    if (firstMissing >= 0) {
+      currentIndex = firstMissing;
+      renderQuestion();
+      showToast('توجد أسئلة غير مجابة. اختر رقم أي سؤال من شريط التنقل للعودة إليه.');
+      return;
+    }
+  }
+  quizSubmitted = true;
+  quizActive = false;
+  stopTimer();
+  const rows = currentQuestions.map((q, i) => ({
+    q,
+    i,
+    selected: userAnswers[i],
+    isAnswered: isAnsweredAt(i),
+    isCorrect: q.type === 'drawing' ? null : isCorrectAt(i),
+    opts: shuffledOptions[i]
+  }));
+  const autoRows = rows.filter(row => row.q.type !== 'drawing');
+  const drawingRows = rows.filter(row => row.q.type === 'drawing');
+  const correct = autoRows.filter(row => row.isAnswered && row.isCorrect).length;
+  const blank = autoRows.filter(row => !row.isAnswered).length;
+  const wrong = autoRows.length - correct - blank;
+  const score = autoRows.length ? Math.round(correct / autoRows.length * 100) : 0;
+  $('quizScreen').hidden = true;
+  $('resultsScreen').hidden = false;
+  $('resultScore').textContent = `${score}%`;
+  $('resultCorrect').textContent = correct;
+  $('resultWrong').textContent = wrong;
+  $('resultBlank').textContent = blank;
+  $('resultTotal').textContent = rows.length;
+  $('resultAutoTotal').textContent = autoRows.length;
+  $('resultDrawing').textContent = drawingRows.length;
+  $('resultChapterTitle').textContent = `Chapter ${currentChapter} · ${chapterMeta[currentChapter].title}`;
+  $('resultMessage').textContent = automatic ? 'انتهى الاختبار تلقائيًا بسبب انتهاء الوقت أو اختيار الإنهاء المبكر. راجع الشرح ومصدر كل سؤال أدناه.' : 'اكتمل الاختبار. يمكنك مراجعة الإجابة والتعليل بالإنجليزية والعربية ومصدر كل سؤال أدناه.';
+  $('reviewList').innerHTML = rows.map((row, idx) => {
+    const q = row.q;
+    const state = q.type === 'drawing' ? 'drawing' : !row.isAnswered ? 'unanswered' : row.isCorrect ? 'correct' : 'wrong';
+    const status = q.type === 'drawing' ? 'Drawing task / تمرين رسم' : !row.isAnswered ? 'غير مجاب' : row.isCorrect ? 'صحيحة / Correct' : 'خاطئة / Incorrect';
+    const image = q.image ? `<img class="review-image ${q.type === 'visual-mcq' ? 'review-object-image' : ''}" src="${esc(q.image)}" alt="Drawing for review question ${idx+1}">` : '';
+    const visualReview = q.type === 'visual-mcq' ? `<div class="review-visual-options">${q.visualOptions.map((src, optionIndex) => `<div class="review-visual-option ${row.opts.correct === optionIndex ? 'review-visual-correct' : ''}"><strong>Option ${String.fromCharCode(65+optionIndex)}${row.opts.correct === optionIndex ? ' · Correct answer' : ''}</strong><img src="${esc(src)}" alt="Option ${String.fromCharCode(65+optionIndex)}" loading="lazy"></div>`).join('')}</div>` : '';
+    const meta = chapterMeta[q.chapter];
+    const pageText = q.sourcePage ? ` · PDF page ${q.sourcePage}` : '';
+    const source = `<div class="review-meta"><strong>Source / المصدر:</strong> ${esc(meta.sourceFile)} · <strong>Chapter ${q.chapter}:</strong> ${esc(meta.title)} · <strong>Topic:</strong> ${esc(q.topic)}${pageText}</div>`;
+    const userAnswer = formatUserAnswer(q, row.selected, row.opts);
+    const correctAnswer = formatCorrectAnswer(q, row.opts);
+    return `<details class="review-item ${state}" ${idx < 3 ? 'open' : ''}>
+      <summary><span class="review-num">${idx+1}</span><span class="review-question">${esc(q.question)}</span><span class="review-status">${status}</span></summary>
+      <div class="review-body">${source}${image}${visualReview}
+        <p><b>Your answer / إجابتك:</b> ${esc(userAnswer)}</p>
+        <p><b>Correct answer / الإجابة الصحيحة:</b> ${esc(correctAnswer)}</p>
+        ${buildExplanation(q,row.opts)}
+      </div></details>`;
+  }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function returnHome() {
+  if (quizActive && !confirm('العودة ستنهي الاختبار الحالي. هل تريد المتابعة؟')) return;
+  stopTimer();
+  quizActive = false;
+  quizSubmitted = false;
+  $('resultsScreen').hidden = true;
+  $('quizScreen').hidden = true;
+  $('homeScreen').hidden = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function showToast(message) {
+  const toast = $('toast');
+  toast.textContent = message;
+  toast.hidden = false;
+  clearTimeout(showToast.handle);
+  showToast.handle = setTimeout(() => { toast.hidden = true; }, 3000);
+}
+function showReviewFilter(filter) {
+  document.querySelectorAll('[data-review-filter]').forEach(btn => btn.classList.toggle('active', btn.dataset.reviewFilter === filter));
+  document.querySelectorAll('.review-item').forEach(item => {
+    item.hidden = filter === 'all' ? false : !item.classList.contains(filter);
+  });
+}
+function openImageZoom(src) {
+  if (!src) return;
+  const dialog = $('imageZoomDialog');
+  $('zoomedImage').src = src;
+  if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+}
+function closeImageZoom() {
+  const dialog = $('imageZoomDialog');
+  if (dialog && dialog.open) dialog.close();
+  if ($('zoomedImage')) $('zoomedImage').src = '';
+}
+window.addEventListener('beforeunload', e => {
+  if (quizActive && !quizSubmitted) { e.preventDefault(); e.returnValue = ''; }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  $('pledgeScreen').hidden = false;
+  $('mainContent').hidden = true;
+  initChapters();
+  document.querySelectorAll('[data-review-filter]').forEach(btn => btn.addEventListener('click', () => showReviewFilter(btn.dataset.reviewFilter)));
+});
