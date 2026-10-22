@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-label="Unlabelled mechanical bracket drawing for line annotation">
+<rect width="720" height="420" rx="16" fill="#fff"/>
+<g fill="none" stroke="#203d5c" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M120 300 L120 130 L390 130 L390 170 L450 170 L450 300 Z" stroke-width="4"/>
+ <path d="M120 300 L180 340 L510 340 L450 300" stroke-width="4"/>
+ <path d="M450 300 L510 340 L510 210 L450 170" stroke-width="4"/>
+ <path d="M180 340 L180 170 L390 170" stroke-width="2.5" stroke-dasharray="10 7"/>
+ <path d="M180 170 L120 130 M390 130 L450 170" stroke-width="2.5"/>
+ <circle cx="285" cy="230" r="42" stroke-width="3"/>
+ <circle cx="285" cy="230" r="20" stroke-width="3"/>
+ <path d="M230 230 H340 M285 175 V285" stroke-width="1.8" stroke-dasharray="22 6 4 6"/>
+ <path d="M120 365 H450 M120 354 V376 M450 354 V376" stroke-width="1.7"/>
+ <path d="M120 365 l10 -5 v10 z M450 365 l-10 -5 v10 z" fill="#203d5c" stroke-width="1"/>
+ <path d="M285 170 L350 80 L420 80" stroke-width="1.6"/>
+ <path d="M525 230 L585 190 L645 190" stroke-width="1.6"/>
+</g>
+<text x="285" y="390" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#5d718d">Annotate the line types without pre-labelled answers.</text>
+</svg>
