@@ -11,7 +11,7 @@ function add(ch, topic, question, options, correct, en, ar, image = null, type =
   if (!questionsDB[ch] || !Array.isArray(options) || options.length < 2 || !Number.isInteger(correct) || correct < 0 || correct >= options.length) {
     throw new Error('Invalid question definition: ' + question);
   }
-  questionsDB[ch].push({ id: ++questionId, chapter: ch, topic, type, question, options, correct, explanationEn: en, explanationAr: ar, image });
+  questionsDB[ch].push({ id: ++questionId, chapter: ch, topic, type, question, options, correct, explanationEn: en, explanationAr: ar, image: null });
 }
 function addFact(ch, topic, term, definition, distractors, en, ar, image = null) {
   add(ch, topic, `According to the lecture, what is ${term}?`, [definition, ...distractors].slice(0,4), 0, en, ar, image);
@@ -25,10 +25,12 @@ function addBlank(ch, topic, question, options, correct, en, ar, image = null) {
 function addMatching(ch, topic, question, pairs, en, ar, image = null) {
   const options = pairs.map(pair => pair[1]);
   if (options.length < 3 || new Set(options).size !== options.length) throw new Error('Invalid matching set: ' + question);
-  questionsDB[ch].push({ id: ++questionId, chapter: ch, topic, type: 'matching', question, options, correct: null, pairs, explanationEn: en, explanationAr: ar, image });
+  questionsDB[ch].push({ id: ++questionId, chapter: ch, topic, type: 'matching', question, options, correct: null, pairs, explanationEn: en, explanationAr: ar, image: null });
 }
 function addDrawing(ch, topic, question, image, en, ar, sourcePage = null) {
-  questionsDB[ch].push({ id: ++questionId, chapter: ch, topic, type: 'drawing', question, options: [], correct: null, explanationEn: en, explanationAr: ar, image, sourcePage });
+  // The online exam uses auto-graded MCQ/TF/fill/matching items only.
+  // Increment once to preserve the original IDs used by the curation map, but do not store the paper task or its answer-bearing source image.
+  questionId++;
 }
 
 // -----------------------------------------------------------------------------
@@ -111,7 +113,7 @@ add(1,'Drawing types','Which statement about a sketch matches the lecture?',[
 'It must have an exact scale',
 'It is made only with a compass and set squares'
 ],0,'The lecture defines a sketch as a drawing made without drawing tools, using pencil and paper, with an approximate scale.','تعرف المحاضرة الرسم التخطيطي بأنه رسم بالقلم والورق دون أدوات رسم، ويكون مقياسه تقريبيًا.');
-add(1,'Design process','In the design process diagram, what is one purpose of visualization?',[
+add(1,'Design process','According to the design-process section, what is one purpose of visualization?',[
 'To mentally picture things that do not yet exist',
 'To replace all communication',
 'To calculate paper weight',
@@ -122,13 +124,13 @@ add(1,'Design process','What does the design-process slide say detail drawings a
 'Only an artistic interpretation',
 'Only a rough idea without dimensions',
 'Only a list of tools'
-],0,'The diagram connects detail drawings and data with recording the precise process or information for production/implementation.','يربط المخطط الرسومات التفصيلية والبيانات بتسجيل المعلومات الدقيقة للإنتاج أو التنفيذ.');
+],0,'The design-process section connects detail drawings and data with recording precise information for production or implementation.','يربط المخطط الرسومات التفصيلية والبيانات بتسجيل المعلومات الدقيقة للإنتاج أو التنفيذ.');
 add(1,'Design process','Why should a design solution be communicated to others without ambiguity?',[
 'To communicate the design solution clearly',
 'To make the drawing more decorative',
 'To avoid recording the solution',
 'To make dimensions approximate'
-],0,'The design-process diagram says the design solution should be communicated to others without ambiguity.','يذكر مخطط عملية التصميم أن الحل التصميمي ينبغي أن يُنقل للآخرين دون لبس.');
+],0,'The design-process section says the design solution should be communicated to others without ambiguity.','يذكر مخطط عملية التصميم أن الحل التصميمي ينبغي أن يُنقل للآخرين دون لبس.');
 add(1,'Engineering applications','According to Chapter 1, engineers use technical means to:',[
 'Solve problems and design products, systems, devices and structures',
 'Produce artistic images only',
@@ -249,13 +251,13 @@ add(1,'Drawing tools','Which statement best matches the lecture’s message abou
 'Only expensive instruments matter',
 'Instruments are not needed for technical drawings'
 ],0,'The lecture emphasizes knowledge, skill and practice in using a variety of instruments.','تؤكد المحاضرة أهمية المعرفة والمهارة والتدريب عند استخدام أدوات الرسم المختلفة.');
-add(1,'Visual question','In the drawing-sheet diagram, which labelled element is the box containing drawing information?',[
+add(1,'Visual question','Which drawing-sheet component contains the drawing title, scale, author and checking details?',[
 'Title block','Border line','Guide line','Scale line'
 ],0,'The title block is the box containing information such as the drawing title, scale and author.','خانة العنوان هي الصندوق الذي يحتوي على معلومات مثل عنوان الرسم والمقياس واسم من أعدّه.','assets/drawing-sheet.svg');
-add(1,'Visual question','In the scale diagram, which example represents enlargement?',[
+add(1,'Visual question','According to the lecture, which scale ratio represents enlargement?',[
 '2:1','1:2','1:1','A4'
 ],0,'The lecture’s rule X:1 where X is greater than 1 represents enlargement.','قاعدة المحاضرة X:1 عندما تكون X أكبر من 1 تمثل التكبير.','assets/scale.svg');
-add(1,'Visual question','The diagram shows the standard ISO A-series sheet dimensions. Which sheet is the largest listed?',[
+add(1,'Visual question','Which is the largest sheet in the ISO A0–A4 sequence listed in the lecture?',[
 'A0','A1','A3','A4'
 ],0,'A0 is the largest standard sheet listed in the lecture table.','A0 أكبر ورقة قياسية ضمن الأحجام المذكورة في جدول المحاضرة.','assets/drawing-sheet.svg');
 
@@ -315,7 +317,7 @@ add(2,'Dimension lines','What do dimension lines indicate?',[
 add(2,'Dimension lines','What is shown at the ends of dimension lines?',[
 'Arrowheads','Pairs of short dashes','Wavy ends','Circular markers only'
 ],0,'The lecture describes dimension lines as thin lines with arrowheads at their ends.','تصف المحاضرة خطوط الأبعاد بأنها خطوط رفيعة ذات رؤوس أسهم عند الأطراف.','assets/line-types.svg');
-add(2,'Dimension lines','Why is a dimension line broken along its length in the lecture diagram?',[
+add(2,'Dimension lines','Why is a dimension line interrupted along its length in the lecture?',[
 'To make room for the dimension number','To show a hidden edge','To mark the centre of a circle','To show a movable part'
 ],0,'The dimension line is broken along its length to make room for the dimension number.','يُترك فراغ في خط البعد لإتاحة مساحة لرقم البعد.');
 add(2,'Extension lines','What is the main function of extension lines?',[
@@ -372,21 +374,21 @@ add(2,'Phantom lines','How are phantom lines described in the lecture?',[
 add(2,'Symmetry lines','What is the purpose of a symmetry line?',[
 'To act as an axis of symmetry of a particular view','To show the direction of a section cut','To connect a note to a feature','To represent a visible outline'
 ],0,'The slide says symmetry lines act as the axis of symmetry of a particular view.','تذكر السلايد أن خط التماثل يعمل محورًا للتماثل في منظور معين.','assets/line-types.svg');
-add(2,'Visual line identification','In the line-type diagram, which sample is labelled B and uses short separated dashes?',[
+add(2,'Visual line identification','Which line type is conventionally represented by short, separated dashes?',[
 'Hidden line','Visible/object line','Dimension line','Short break line'
-],0,'The diagram’s sample B is a hidden line, shown with short separated dashes.','العينة B في الرسم هي الخط المخفي، ويظهر بشرطات قصيرة منفصلة.','assets/line-types.svg');
-add(2,'Visual line identification','In the line-type diagram, which sample is a thick wavy line?',[
-'G — break line','A — visible line','C — center line','D — dimension line'
-],0,'The diagram labels the thick wavy sample G as a short break line.','يسمي الرسم العينة G، وهي الخط المتموج السميك، خط كسر قصيرًا.','assets/line-types.svg');
-add(2,'Visual line identification','In the line-type diagram, which sample uses alternating long and short dashes?',[
-'C — center line','A — visible line','B — hidden line','E — hatching'
-],0,'The center line sample uses alternating long and short dashes.','تستخدم عينة خط المركز شرطات طويلة وقصيرة بالتناوب.','assets/line-types.svg');
-add(2,'Visual line identification','Which sample in the line-type diagram includes arrowheads at both ends?',[
-'D — dimension line','B — hidden line','F — phantom line','G — short break line'
-],0,'The dimension line sample includes arrowheads at both ends.','تتضمن عينة خط البعد رأسي سهم عند الطرفين.','assets/line-types.svg');
-add(2,'Visual line identification','Which sample in the line-type diagram shows diagonal hatching?',[
-'E — section lines','A — visible line','C — center line','F — phantom line'
-],0,'The hatching sample represents section lines used for cut surfaces.','تمثل عينة التهشير خطوط المقاطع المستخدمة للأسطح المقطوعة.','assets/line-types.svg');
+],0,'Hidden lines are conventionally drawn as short, separated dashes in the supplied line-type definitions.','تُرسم الخطوط المخفية اصطلاحًا بشرطات قصيرة منفصلة وفق تعريفات أنواع الخطوط في المقرر.','assets/line-types.svg');
+add(2,'Visual line identification','Which line type is conventionally represented by a thick wavy line?',[
+'Short break line','Visible/object line','Centre line','Dimension line'
+],0,'A short break line is conventionally represented by a thick wavy line.','يُمثّل خط الكسر القصير اصطلاحًا بخط متموج سميك.','assets/line-types.svg');
+add(2,'Visual line identification','Which line type uses alternating long and short dashes?',[
+'Centre line','Visible/object line','Hidden line','Section line'
+],0,'Centre lines use alternating long and short dashes.','تستخدم خطوط المركز شرطات طويلة وقصيرة بالتناوب.','assets/line-types.svg');
+add(2,'Visual line identification','Which line type is typically drawn with arrowheads at both ends to indicate a size?',[
+'Dimension line','Hidden line','Phantom line','Short break line'
+],0,'Dimension lines use arrowheads at both ends to indicate a measured size.','تستخدم خطوط الأبعاد رأسي سهم عند الطرفين لتحديد القياس.','assets/line-types.svg');
+add(2,'Visual line identification','Which line type represents a cut surface using diagonal hatching?',[
+'Section lines','Visible/object line','Centre line','Phantom line'
+],0,'Section lines use diagonal hatching to represent surfaces cut by a section plane.','تستخدم خطوط المقاطع تهشيرًا مائلًا لتمثيل الأسطح التي يقطعها مستوى القطع.','assets/line-types.svg');
 
 // Additional questions generated from the source's eleven line-type definitions.
 const lineFacts = [
@@ -467,13 +469,13 @@ add(3,'First/third angle','According to the supplied first/third-angle slide, fi
 add(3,'First/third angle','According to the supplied first/third-angle slide, third-angle projection is widely used in:',[
 'Both the USA and the UK','Europe only','Japan and Australia only','Africa only'
 ],0,'The projection slide states that third-angle projection is widely used in both the USA and the UK.','تذكر سلايد الإسقاط أن الإسقاط بالزاوية الثالثة مستخدم على نطاق واسع في الولايات المتحدة والمملكة المتحدة.','assets/projection-first-third.svg');
-add(3,'Visual projection question','Look at the supplied projection-symbol diagram. In the first-angle symbol, which view is placed to the right of the side-view frustum?',[
+add(3,'Visual projection question','According to the first-angle projection convention taught in the course, which view is placed to the right of the frustum?',[
 'The circular end view','The title block','The top view only','The hidden-line sample'
 ],0,'The course diagram places the circular end view to the right of the frustum in the first-angle symbol.','يضع رسم المقرر المنظر الدائري النهائي إلى يمين مخروط الإسقاط في رمز الزاوية الأولى.','assets/projection-first-third.svg');
-add(3,'Visual projection question','Look at the supplied projection-symbol diagram. In the third-angle symbol, which view is placed to the left of the frustum?',[
+add(3,'Visual projection question','According to the third-angle projection convention taught in the course, which view is placed to the left of the frustum?',[
 'The circular end view','The hidden-line view','The title block','The side view only'
 ],0,'The course diagram places the circular end view to the left of the frustum in the third-angle symbol.','يضع رسم المقرر المنظر الدائري النهائي إلى يسار مخروط الإسقاط في رمز الزاوية الثالثة.','assets/projection-first-third.svg');
-add(3,'Visual orthographic question','The illustration shows an isometric object and separate orthographic views. What is the purpose of the separate views?',[
+add(3,'Visual orthographic question','What is the purpose of separate orthographic views of a three-dimensional object?',[
 'To show 2-D views of the 3-D object','To show only colour and shading','To replace dimensions with words','To make the object perspective-only'
 ],0,'The chapter describes multiview drawings as 2D views of an object.','يصف الفصل الرسومات متعددة المساقط بأنها مناظر ثنائية الأبعاد للجسم.','assets/orthographic-views.svg');
 add(3,'2D shapes','Which group contains the basic 2-D shapes named in the lecture?',[
@@ -602,13 +604,13 @@ add(3,'3D shapes in Chapter 3','Which description of a cylinder appears in the C
 add(3,'3D shapes in Chapter 3','Which example of a sphere is given in the lecture?',[
 'Earth or a ball','A brick or book','A birthday hat','A water pipe'
 ],0,'The Chapter 3 table gives Earth and a ball as sphere examples.','يعطي جدول الفصل الثالث الأرض والكرة مثالين للكرة المجسمة.');
-add(3,'Visual shapes','In the shapes diagram, which shape has a curved boundary and no straight sides?',[
+add(3,'Visual shapes','Which two-dimensional shape has a curved boundary and no straight sides?',[
 'Circle','Triangle','Square','Trapezium'
 ],0,'The lecture distinguishes the circle as a curved shape, unlike polygons with sides.','تميز المحاضرة الدائرة بوصفها شكلًا منحنيًا بخلاف المضلعات ذات الأضلاع.','assets/shapes-2d.svg');
-add(3,'Visual shapes','Which labelled shape in the diagram has eight sides?',[
+add(3,'Visual shapes','Which polygon has eight sides?',[
 'Octagon','Pentagon','Triangle','Rectangle'
 ],0,'An octagon is an eight-sided polygon in the lecture.','الثماني مضلع له ثمانية أضلاع وفق المحاضرة.','assets/shapes-2d.svg');
-add(3,'Visual shapes','Which labelled shape in the diagram is a quadrilateral with one pair of opposite sides parallel?',[
+add(3,'Visual shapes','Which quadrilateral has one pair of opposite sides parallel and the other pair not parallel, according to the lecture?',[
 'Trapezium','Circle','Triangle','Pentagon'
 ],0,'The lecture defines a trapezium as a quadrilateral with one pair of opposite sides parallel.','تعرف المحاضرة شبه المنحرف بأنه شكل رباعي له زوج واحد من الأضلاع المتقابلة المتوازية.','assets/shapes-2d.svg');
 
@@ -753,16 +755,16 @@ add(4,'Euler formula','The worked example in Chapter 4 checks a dodecahedron wit
 add(4,'Euler formula','A solid has 6 faces, 8 vertices and 12 edges. What is F + V − E?',[
 '2','0','4','6'
 ],0,'Using the values shown in the course examples, F + V − E = 6 + 8 − 12 = 2.','باستخدام القيم الواردة في أمثلة المقرر: F + V − E = 6 + 8 − 12 = 2.','assets/platonic-solids.svg');
-add(4,'Visual solid identification','In the five-solids diagram, which solid is labelled with 6 faces, 12 edges and 8 vertices?',[
+add(4,'Visual solid identification','Which Platonic solid has 6 faces, 12 edges and 8 vertices?',[
 'Cube','Tetrahedron','Octahedron','Dodecahedron'
 ],0,'The lecture identifies the cube as having 6 faces, 12 edges and 8 vertices.','تحدد المحاضرة المكعب بأنه يملك 6 أوجه و12 حرفًا و8 رؤوس.','assets/platonic-solids.svg');
-add(4,'Visual solid identification','In the five-solids diagram, which solid has 4 triangular faces, 6 edges and 4 vertices?',[
+add(4,'Visual solid identification','Which Platonic solid has 4 triangular faces, 6 edges and 4 vertices?',[
 'Tetrahedron','Cube','Octahedron','Icosahedron'
 ],0,'The lecture identifies the tetrahedron by its 4 triangular faces, 6 edges and 4 vertices.','تحدد المحاضرة رباعي الوجوه بأوجهه المثلثة الأربعة و6 أحرف و4 رؤوس.','assets/platonic-solids.svg');
-add(4,'Visual solid identification','In the five-solids diagram, which solid has 12 pentagonal faces?',[
+add(4,'Visual solid identification','Which Platonic solid has 12 pentagonal faces?',[
 'Dodecahedron','Octahedron','Cube','Tetrahedron'
 ],0,'The lecture says the dodecahedron has 12 pentagonal faces.','تذكر المحاضرة أن للاثني عشري الوجوه 12 وجهًا خماسيًا.','assets/platonic-solids.svg');
-add(4,'Visual solid identification','Which solid in the diagram has the greatest number of faces?',[
+add(4,'Visual solid identification','Which Platonic solid has the greatest number of faces among the five solids?',[
 'Icosahedron','Cube','Tetrahedron','Octahedron'
 ],0,'The lecture states that the icosahedron has the greatest number of faces of any Platonic solid.','تذكر المحاضرة أن العشريني الوجوه يملك أكبر عدد من الأوجه بين المجسمات الأفلاطونية.','assets/platonic-solids.svg');
 
@@ -778,7 +780,7 @@ add(4,'Visual solid identification','Which solid in the diagram has the greatest
 add(1,'Drawing sheets','What is the principal function of a border line on a drawing sheet?',[ 'It encloses the drawings and is the heaviest peripheral line', 'It indicates the height of letters', 'It records the drawing scale only', 'It marks hidden edges' ],0,'The Chapter 1 slide defines the border line as the heaviest peripheral line enclosing the drawings.','تعرّف شريحة الفصل الأول خط الإطار بأنه أثقل خط محيطي يحيط بالرسومات.','assets/drawing-sheet.svg');
 add(1,'Drawing sheets','Which information is specifically associated with the title block in the lecture?',[ 'Drawing title, scale, drawn-by/check-by details, date and drawing number', 'Only the object colour', 'Only the paper manufacturer', 'Only the list of visible lines' ],0,'The title block records identification and administration details for a drawing, including its title, scale, author/checker, date, drawing number and company name.','تسجل خانة العنوان بيانات تعريف الرسم وإدارته، ومنها العنوان والمقياس واسم الرسام والمراجع والتاريخ ورقم الرسم واسم الشركة.','assets/drawing-sheet.svg');
 add(1,'Drawing sheets','Which standard sheet has dimensions of 297 × 420 mm in the supplied table?',[ 'A3', 'A4', 'A2', 'A1' ],0,'The Chapter 1 ISO sheet-size table lists A3 as 297 × 420 mm.','يسرد جدول أحجام الأوراق في الفصل الأول أبعاد A3 بأنها 297 × 420 مم.','assets/drawing-sheet.svg');
-add(1,'Drawing sheets','According to the ISO sheet-size diagram, which listed size follows A0 as the next smaller sheet?',[ 'A1', 'A2', 'A3', 'A4' ],0,'The Chapter 1 sheet-size diagram shows the ISO sequence from A0 to A4, with A1 immediately smaller than A0.','يوضح مخطط أحجام الأوراق في الفصل الأول التسلسل من A0 إلى A4، وتأتي A1 مباشرةً بعد A0 بوصفها الحجم الأصغر التالي.','assets/drawing-sheet.svg');
+add(1,'Drawing sheets','Which sheet size comes immediately after A0 as the next smaller size in the ISO A-series?',[ 'A1', 'A2', 'A3', 'A4' ],0,'The Chapter 1 sheet-size diagram shows the ISO sequence from A0 to A4, with A1 immediately smaller than A0.','يوضح مخطط أحجام الأوراق في الفصل الأول التسلسل من A0 إلى A4، وتأتي A1 مباشرةً بعد A0 بوصفها الحجم الأصغر التالي.','assets/drawing-sheet.svg');
 add(1,'Drawing scales','A drawing is half the size of the actual object. Which scale notation represents this reduction?',[ '1:2', '2:1', '1:1', '2:2' ],0,'The lecture identifies 1:X, where X is greater than 1, as a reduction scale; 1:2 represents half size.','تحدد المحاضرة 1:X، عندما تكون X أكبر من 1، مقياسًا للتصغير؛ وتمثل 1:2 نصف الحجم الحقيقي.','assets/scale.svg');
 add(1,'Drawing scales','Which notation represents an enlargement scale according to the slide?',[ 'X:1, where X > 1', '1:X, where X > 1', '1:1 only', 'X:X only' ],0,'The slide labels X:1, with X greater than 1, as an enlargement scale.','تسمي الشريحة X:1، عندما تكون X أكبر من 1، مقياس تكبير.','assets/scale.svg');
 add(1,'Drawing tools','According to the pencil slide, which pencil grades are suggested for a thick line?',[ '2H or HB', '4H only', '4B only', '8B only' ],0,'The supplied pencil slide notes 2H or HB for a thick line and 4H for a thin line.','تشير شريحة الأقلام إلى استخدام 2H أو HB للخط السميك و4H للخط الرفيع.');
@@ -1006,6 +1008,10 @@ for (const questions of Object.values(questionsDB)) {
     }
   }
 }
+// Paper-drawing tasks are excluded from the online exam.
+for (const chapter of Object.keys(questionsDB)) {
+  questionsDB[chapter] = questionsDB[chapter].filter(q => q.type !== 'drawing');
+}
 // Reassign contiguous IDs after curation so saved question indexes remain clean.
 let curatedId = 0;
 for (const chapter of Object.keys(questionsDB)) {
@@ -1013,14 +1019,33 @@ for (const chapter of Object.keys(questionsDB)) {
 }
 questionId = curatedId;
 
-// Validation: answer keys and images are checked before rendering.
+// Attach only a neutral, unlabelled line-sample sheet to visual line-identification questions.
+// It contains numbered line patterns but no line-type names or answer labels.
+const neutralLineQuestions = new Set([
+  'Which line type is conventionally represented by short, separated dashes?',
+  'Which line type is conventionally represented by a thick wavy line?',
+  'Which line type uses alternating long and short dashes?',
+  'Which line type is typically drawn with arrowheads at both ends to indicate a size?',
+  'Which line type represents a cut surface using diagonal hatching?'
+]);
+for (const questions of Object.values(questionsDB)) {
+  for (const q of questions) {
+    if (q.chapter === 2 && neutralLineQuestions.has(q.question)) q.image = 'assets/line-practice-blank.svg';
+  }
+}
+
+// Validation: prevent answer-bearing reference sheets from appearing during questions.
+// Only dedicated projection tasks may show an unlabelled isometric object and unlabelled view choices.
 for (const [chapter, questions] of Object.entries(questionsDB)) {
   questions.forEach(q => {
     const invalidCore = q.chapter !== Number(chapter) || !q.explanationEn || !q.explanationAr || !q.topic || !q.question;
     const invalidChoice = ['mcq','tf','blank'].includes(q.type) && (!Array.isArray(q.options) || q.options[q.correct] === undefined);
     const invalidMatching = q.type === 'matching' && (!Array.isArray(q.pairs) || q.pairs.length < 3 || q.pairs.some(pair => !pair[0] || !pair[1]));
     const invalidDrawing = q.type === 'drawing' && (!q.image || q.options.length !== 0);
-    if (invalidCore || invalidChoice || invalidMatching || invalidDrawing) throw new Error('Invalid question record: ' + q.question);
+    const safeExamImages = new Set(['assets/projection-object.svg', 'assets/line-practice-blank.svg']);
+    const unsafeImage = q.image && !safeExamImages.has(q.image);
+    const lingeringDrawingTask = q.type === 'drawing';
+    if (invalidCore || invalidChoice || invalidMatching || invalidDrawing || unsafeImage || lingeringDrawingTask) throw new Error('Invalid question record or unsafe image: ' + q.question);
   });
 }
 

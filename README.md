@@ -25,3 +25,17 @@ Projection diagrams are practice schematics derived from the orthographic projec
 
 ## Logo and responsive layout
 Place `Logo.Brhan.png` directly beside `index.html` (not inside `assets`). The stylesheet constrains the logo to a fixed responsive brand area with `object-fit: contain`, so its original pixel dimensions cannot expand the header or push the quiz off-screen. The quiz grid also uses shrinkable `minmax(0, ...)` columns to prevent horizontal overflow on laptop and mobile widths.
+
+
+## Image-answer leak fix (2026-10-22)
+- Answer-revealing reference infographics (sheet-size table, scale comparison, labelled line types, labelled geometric shapes, labelled Platonic solids and labelled projection symbols) are no longer shown alongside ordinary exam questions.
+- During questions, only eight vetted visual items show images: five use an unlabelled line-sample sheet, and three use an unlabelled isometric object with separate, unlabelled orthographic-view choices. The answer-revealing sheet-size, scale, line-type, geometric-shape, Platonic-solid, and projection-symbol infographics are not displayed beside factual questions.
+- Paper-drawing tasks are removed from the online question bank.
+- Prompts that previously referred to a missing labelled diagram have been rewritten as standalone academic questions.
+
+
+## Latest fix: answer-revealing images (2026-10-22)
+- Ordinary factual questions now render without shared labelled reference infographics. In particular, the ISO sheet-size question no longer displays the SVG that lists A4, A3, A2, A1 and A0 dimensions together.
+- Only `assets/line-practice-blank.svg` and `assets/projection-object.svg` are permitted as question images. A runtime validation throws if any other question image is attached.
+- Five line-type visual questions use the unlabelled numbered line-pattern sheet; three projection questions use the unlabelled isometric object and unlabelled answer-option drawings.
+- Question-bank check: 202 total items (57, 34, 67, 44 across Chapters 1–4); zero paper-drawing tasks; zero non-whitelisted question images.
